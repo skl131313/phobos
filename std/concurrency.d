@@ -63,7 +63,6 @@
  */
 module std.concurrency;
 
-
 public
 {
     import std.variant;
@@ -94,7 +93,7 @@ private
         linkDead,
     }
 
-    struct Message
+    export struct Message
     {
         MsgType type;
         Variant data;
@@ -2388,7 +2387,7 @@ private
 
 
     private:
-        struct Node
+        export struct Node
         {
             Node*   next;
             T       val;

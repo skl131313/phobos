@@ -653,7 +653,7 @@ private:
     $(D SysTime)'s range is from approximately 29,000 B.C. to approximately
     29,000 A.D.
   +/
-struct SysTime
+export struct SysTime
 {
     import core.stdc.time : tm;
     version(Posix) import core.sys.posix.sys.time : timeval;
@@ -9253,7 +9253,6 @@ public:
         assert(SysTime.max > SysTime.min);
     }
 
-
 private:
 
     /+
@@ -14768,7 +14767,6 @@ public:
         assert(TimeOfDay.max > TimeOfDay.min);
     }
 
-
 private:
 
     /+
@@ -18212,7 +18210,6 @@ public:
         assert(DateTime.max.year > 0);
         assert(DateTime.max > DateTime.min);
     }
-
 
 private:
 
@@ -34370,7 +34367,7 @@ long removeUnitsFromHNSecs(string units)(long hnsecs) @safe pure nothrow
         year  = The year to get the day for.
         month = The month of the Gregorian Calendar to get the day for.
  +/
-static ubyte maxDay(int year, int month) @safe pure nothrow
+export ubyte maxDay(int year, int month) @safe pure nothrow
 in
 {
     assert(valid!"months"(month));

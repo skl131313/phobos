@@ -15,7 +15,7 @@
     Authors:   $(HTTP digitalmars.com, Walter Bright) and Jonathan M Davis
     Source:    $(PHOBOSSRC std/_utf.d)
    +/
-module std.utf;
+export module std.utf;
 
 import std.meta;       // AliasSeq
 import std.range.primitives;
@@ -31,7 +31,7 @@ debug (utf) import core.stdc.stdio : printf;
 /++
     Exception thrown on errors in std.utf functions.
   +/
-class UTFException : Exception
+export class UTFException : Exception
 {
     import core.internal.string : unsignedToTempString, UnsignedStringBuf;
 
@@ -202,7 +202,7 @@ package auto invalidUTFstrings(Char)() @safe pure @nogc nothrow
     as they are permitted for internal use by an application, but they are
     not allowed for interchange by the Unicode standard.
   +/
-bool isValidDchar(dchar c) pure nothrow @safe @nogc
+bool isValidDchar(dchar c) pure nothrow @safe @nogc export
 {
     /* Note: FFFE and FFFF are specifically permitted by the
      * Unicode standard for application internal use, but are not
@@ -291,7 +291,7 @@ uint stride(S)(auto ref S str)
         return strideImpl(c, 0);
 }
 
-private uint strideImpl(char c, size_t index) @trusted pure
+private export uint strideImpl(char c, size_t index) @trusted pure
 in { assert(c & 0x80); }
 body
 {
@@ -1161,7 +1161,7 @@ package template codeUnitLimit(S)
  * Returns:
  *      decoded character
  */
-private dchar decodeImpl(bool canIndex, UseReplacementDchar useReplacementDchar = No.useReplacementDchar, S)(
+private export dchar decodeImpl(bool canIndex, UseReplacementDchar useReplacementDchar = No.useReplacementDchar, S)(
     auto ref S str, ref size_t index) if (
     is(S : const char[]) || (isInputRange!S && is(Unqual!(ElementEncodingType!S) == char)))
 {
@@ -2418,7 +2418,7 @@ void validate(S)(in S str) @safe pure
 }
 
 /* =================== Conversion to UTF8 ======================= */
-char[] toUTF8(return out char[4] buf, dchar c) nothrow @nogc @safe pure
+char[] toUTF8(return out char[4] buf, dchar c) nothrow @nogc @safe pure export
 {
     if (c <= 0x7F)
     {
@@ -2469,7 +2469,8 @@ char[] toUTF8(return out char[4] buf, dchar c) nothrow @nogc @safe pure
  * See_Also:
  *     For a lazy, non-allocating version of these functions, see $(LREF byUTF).
  */
-string toUTF8(S)(S s) if (isInputRange!S && isSomeChar!(ElementEncodingType!S))
+string toUTF8(S)(S s) export
+    if (isInputRange!S && isSomeChar!(ElementEncodingType!S))
 {
     return toUTFImpl!string(s);
 }
@@ -2501,7 +2502,7 @@ string toUTF8(S)(S s) if (isInputRange!S && isSomeChar!(ElementEncodingType!S))
 
 /* =================== Conversion to UTF16 ======================= */
 
-wchar[] toUTF16(return ref wchar[2] buf, dchar c) nothrow @nogc @safe pure
+wchar[] toUTF16(return ref wchar[2] buf, dchar c) nothrow @nogc @safe pure export
 in
 {
     assert(isValidDchar(c));
@@ -2532,7 +2533,8 @@ body
  * See_Also:
  *     For a lazy, non-allocating version of these functions, see $(LREF byUTF).
  */
-wstring toUTF16(S)(S s) if (isInputRange!S && isSomeChar!(ElementEncodingType!S))
+wstring toUTF16(S)(S s) export
+    if (isInputRange!S && isSomeChar!(ElementEncodingType!S))
 {
     return toUTFImpl!wstring(s);
 }
@@ -2567,7 +2569,8 @@ wstring toUTF16(S)(S s) if (isInputRange!S && isSomeChar!(ElementEncodingType!S)
 /*****
  * Encodes string $(D_PARAM s) into UTF-32 and returns the encoded string.
  */
-dstring toUTF32(scope const char[] s) @safe pure
+dstring toUTF32(scope const char[] s) @safe pure export
+>>>>>>> Added support to make phobos compile into a single shared library on Windows.
 {
     dchar[] r;
     immutable slen = s.length;
@@ -2588,7 +2591,7 @@ dstring toUTF32(scope const char[] s) @safe pure
 }
 
 /// ditto
-dstring toUTF32(scope const wchar[] s) @safe pure
+dstring toUTF32(scope const wchar[] s) @safe pure export
 {
     dchar[] r;
     immutable slen = s.length;
@@ -2609,7 +2612,7 @@ dstring toUTF32(scope const wchar[] s) @safe pure
 }
 
 /// ditto
-dstring toUTF32(scope const dchar[] s) @safe pure
+dstring toUTF32(scope const dchar[] s) @safe pure export
 {
     validate(s);
     return s.idup;

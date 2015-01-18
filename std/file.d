@@ -94,7 +94,7 @@ else version(Posix)
 /++
     Exception thrown for file I/O errors.
  +/
-class FileException : Exception
+export class FileException : Exception
 {
     import std.conv : text, to;
 
@@ -306,7 +306,7 @@ version (Posix) private void[] readImpl(const(char)[] name, const(FSChar)* namez
 }
 
 
-version (Windows) private void[] readImpl(const(char)[] name, const(FSChar)* namez, size_t upTo = size_t.max) @safe
+version (Windows) private export void[] readImpl(const(char)[] name, const(FSChar)* namez, size_t upTo = size_t.max) @safe
 {
     import std.algorithm.comparison : min;
     import std.array : uninitializedArray;
@@ -1435,7 +1435,8 @@ bool exists(R)(auto ref R name)
     return exists!(StringTypeOf!R)(name);
 }
 
-private bool existsImpl(const(FSChar)* namez) @trusted nothrow @nogc
+/* Workaround */
+private export bool existsImpl(const(FSChar)* namez) @trusted nothrow @nogc
 {
     version(Windows)
     {
@@ -2861,7 +2862,7 @@ assert(!de2.isFile);
 }
 else version(Windows)
 {
-    struct DirEntry
+    export struct DirEntry
     {
         import std.utf : toUTF8;
     public:
@@ -3317,7 +3318,7 @@ void copy(RF, RT)(auto ref RF from, auto ref RT to, PreserveAttributes preserve 
     assert(__traits(compiles, copy("from.txt", "to.txt")));
 }
 
-private void copyImpl(const(char)[] f, const(char)[] t, const(FSChar)* fromz, const(FSChar)* toz,
+private export void copyImpl(const(char)[] f, const(char)[] t, const(FSChar)* fromz, const(FSChar)* toz,
         PreserveAttributes preserve) @trusted
 {
     version(Windows)
@@ -3572,7 +3573,7 @@ enum SpanMode
     breadth,
 }
 
-private struct DirIteratorImpl
+private export struct DirIteratorImpl
 {
     import std.array : Appender, appender;
     SpanMode _mode;
