@@ -31,18 +31,24 @@ CP=cp
 DIR=\dmd2
 
 ## Visual C directories
-VCDIR=\Program Files (x86)\Microsoft Visual Studio 10.0\VC
-SDKDIR=\Program Files (x86)\Microsoft SDKs\Windows\v7.0A
+VCDIR=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
+WINDOWSSDKDIR=C:\Program Files (x86)\Windows Kits\10
+UNIVERSALCRTSDKDIR=C:\Program Files (x86)\Windows Kits\10
+UCRTVERSION=10.0.14393.0
+LIBSUBDIR=x64
 
 ## Flags for VC compiler
 
-#CFLAGS=/Zi /nologo /I"$(VCDIR)\INCLUDE" /I"$(SDKDIR)\Include"
-CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(SDKDIR)\Include"
+#CFLAGS=/Zi /nologo /I"$(VCDIR)\INCLUDE" /I"$(UNIVERSALCRTSDKDIR)\Include\$(UCRTVERSION)\ucrt" /I"$(WINDOWSSDKDIR)"\Include
+CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(UNIVERSALCRTSDKDIR)\Include\$(UCRTVERSION)\ucrt" /I"$(WINDOWSSDKDIR)"\Include
 
 ## Location of druntime tree
 
 DRUNTIME=..\druntime
-DRUNTIMELIB=$(DRUNTIME)\lib\druntime$(MODEL).lib
+DRUNTIME_BASE=druntime$(MODEL)
+DRUNTIMELIB=$(DRUNTIME)\lib\$(DRUNTIME_BASE).lib
+DRUNTIME_SHARED_OBJ_LIST=$(DRUNTIME)\lib\$(DRUNTIME_BASE)s_objs.txt
+DRUNTIME_SHARED_DLLFIXUP=$(DRUNTIME)\lib\dllfixup$(MODEL).lib
 
 ## Flags for dmd D compiler
 
@@ -92,8 +98,10 @@ ZLIB=etc\c\zlib\zlib$(MODEL).lib
 	$(CC) -c $*
 
 LIB=phobos$(MODEL).lib
+LIB_SHARED=phobos$(MODEL)s.lib
+DLL=phobos$(MODEL)s.dll
 
-targets : $(LIB)
+targets : $(LIB) $(LIB_SHARED)
 
 test : test.exe
 
@@ -583,6 +591,19 @@ $(LIB) : $(SRC_TO_COMPILE) \
 	$(DMD) -lib -of$(LIB) -Xfphobos.json $(DFLAGS) $(SRC_TO_COMPILE) \
 		$(ZLIB) $(DRUNTIMELIB)
 
+$(LIB_SHARED) : $(SRC_TO_COMPILE) \
+	$(ZLIB) $(DRUNTIME_SHARED_OBJ_LIST) $(DRUNTIME_SHARED_DLLFIXUP) win32.mak win64.mak
+	SET LINKCMD=$(VCDIR)\bin\link.exe
+	SET VCINSTALLDIR=$(VCDIR)
+	SET UniversalCRTSdkDir=$(UNIVERSALCRTSDKDIR)
+	SET UCRTVersion=$(UCRTVERSION)
+	SET WindowsSdkDir=$(WINDOWSSDKDIR)
+	SET LIB="$(UNIVERSALCRTSDKDIR)\Lib\$(UCRTVERSION)\um\$(LIBSUBDIR)";"$(UNIVERSALCRTSDKDIR)\Lib\$(UCRTVERSION)\ucrt\$(LIBSUBDIR)"
+	$(DMD) -shared -of$(DLL) $(DFLAGS) $(SRC_TO_COMPILE) \
+		$(ZLIB) -defaultlib="msvcrt" -L/IMPLIB:imp_$(LIB_SHARED) -L/NODEFAULTLIB:libcmt -L/IGNORE:4049 \
+		-L/IGNORE:4217 $(DRUNTIME_SHARED_DLLFIXUP) @$(DRUNTIME_SHARED_OBJ_LIST)
+	$(AR) /OUT:$(LIB_SHARED) imp_$(LIB_SHARED) $(DRUNTIME_SHARED_DLLFIXUP)
+
 UNITTEST_OBJS= \
 		unittest1.obj \
 		unittest2.obj \
@@ -668,11 +689,11 @@ CC32=$(CC)\..\..\cl
 
 # build phobos32mscoff.lib
 phobos32mscoff:
-	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)"
+	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff LIBSUBDIR=x86 "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)"
 
 # run unittests for 32-bit COFF version
 unittest32mscoff:
-	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)" unittest
+	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff LIBSUBDIR=x86 "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)" unittest
 
 ######################################################
 
@@ -1147,6 +1168,8 @@ clean:
 	del $(DOCS)
 	del $(UNITTEST_OBJS) unittest.obj unittest.exe
 	del $(LIB)
+	del $(LIB_SHARED)
+	del $(DLL)
 	del phobos.json
 
 cleanhtml:
