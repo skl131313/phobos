@@ -1,4 +1,4 @@
-// Written in the D programming language.
+﻿// Written in the D programming language.
 
 /**
 Standard I/O functions that extend $(B core.stdc.stdio).  $(B core.stdc.stdio)
@@ -11,7 +11,7 @@ Authors:   $(HTTP digitalmars.com, Walter Bright),
            $(HTTP erdani.org, Andrei Alexandrescu),
            Alex Rønne Petersen
  */
-module std.stdio;
+export module std.stdio;
 
 public import core.stdc.stdio;
 import core.stdc.stddef; // wchar_t
@@ -21,7 +21,6 @@ import std.range.primitives; // ElementEncodingType, empty, front,
 import std.stdiobase;
 import std.traits; // isSomeChar, isSomeString, Unqual
 import std.typecons; // Flag
-
 
 /++
 If flag $(D KeepTerminator) is set to $(D KeepTerminator.yes), then the delimiter
@@ -348,7 +347,7 @@ Hello, Jimmy!
 % __
 )
  */
-struct File
+export struct File
 {
     import std.range.primitives : ElementEncodingType;
     import std.traits : isScalarType, isArray;
@@ -2605,7 +2604,7 @@ $(D Range) that locks the file and allows fast writing to it.
         FILE* fps_;
 
         // the unshared version of fps
-        @property _iobuf* handle_() @trusted { return cast(_iobuf*) fps_; }
+        @property _iobuf* handle_() @trusted export { return cast(_iobuf*) fps_; }
 
         // the file's orientation (byte- or wide-oriented)
         int orientation_;
@@ -3362,7 +3361,7 @@ template isFileHandle(T)
 /**
  * Property used by writeln/etc. so it can infer @safe since stdout is __gshared
  */
-private @property File trustedStdout() @trusted
+private @property File trustedStdout() @trusted export
 {
     return stdout;
 }

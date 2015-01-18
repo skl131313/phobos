@@ -146,7 +146,7 @@ Authors: $(HTTP digitalmars.com, Walter Bright),
 Source:    $(PHOBOSSRC std/_string.d)
 
 */
-module std.string;
+export module std.string;
 
 //debug=string;                 // uncomment to turn on debugging trustedPrintf's
 

@@ -50,7 +50,7 @@ Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
          http://www.boost.org/LICENSE_1_0.txt)
 */
-module std.encoding;
+export module std.encoding;
 
 import std.traits;
 import std.typecons;
@@ -2351,7 +2351,7 @@ class UnrecognizedEncodingException : EncodingException
 }
 
 /** Abstract base class of all encoding schemes */
-abstract class EncodingScheme
+export abstract class EncodingScheme
 {
     import std.uni : toLower;
 
@@ -2689,7 +2689,7 @@ abstract class EncodingScheme
                  "iso-ir-6",
                  "us"
  */
-class EncodingSchemeASCII : EncodingScheme
+export class EncodingSchemeASCII : EncodingScheme
 {
     /* // moved to std.internal.phobosinit
     shared static this()
@@ -2775,7 +2775,7 @@ class EncodingSchemeASCII : EncodingScheme
                  "l1",
                  "latin1"
  */
-class EncodingSchemeLatin1 : EncodingScheme
+export class EncodingSchemeLatin1 : EncodingScheme
 {
     /* // moved to std.internal.phobosinit
     shared static this()
@@ -2855,7 +2855,7 @@ class EncodingSchemeLatin1 : EncodingScheme
                  "ISO_8859-2:1999",
                  "Windows-28592"
  */
-class EncodingSchemeLatin2 : EncodingScheme
+export class EncodingSchemeLatin2 : EncodingScheme
 {
     /* // moved to std.internal.phobosinit
     shared static this()
@@ -2927,7 +2927,7 @@ class EncodingSchemeLatin2 : EncodingScheme
  This scheme recognises the following names:
                  "windows-1250"
  */
-class EncodingSchemeWindows1250 : EncodingScheme
+export class EncodingSchemeWindows1250 : EncodingScheme
 {
     /* // moved to std.internal.phobosinit
     shared static this()
@@ -2995,7 +2995,7 @@ class EncodingSchemeWindows1250 : EncodingScheme
  This scheme recognises the following names:
                  "windows-1252"
  */
-class EncodingSchemeWindows1252 : EncodingScheme
+export class EncodingSchemeWindows1252 : EncodingScheme
 {
     /* // moved to std.internal.phobosinit
     shared static this()
@@ -3063,7 +3063,7 @@ class EncodingSchemeWindows1252 : EncodingScheme
  This scheme recognises the following names:
                  "UTF-8"
  */
-class EncodingSchemeUtf8 : EncodingScheme
+export class EncodingSchemeUtf8 : EncodingScheme
 {
     /* // moved to std.internal.phobosinit
     shared static this()
@@ -3132,7 +3132,7 @@ class EncodingSchemeUtf8 : EncodingScheme
                  "UTF-16LE" (little-endian architecture only)
                  "UTF-16BE" (big-endian architecture only)
  */
-class EncodingSchemeUtf16Native : EncodingScheme
+export class EncodingSchemeUtf16Native : EncodingScheme
 {
     /* // moved to std.internal.phobosinit
     shared static this()
@@ -3228,7 +3228,7 @@ class EncodingSchemeUtf16Native : EncodingScheme
                  "UTF-32LE" (little-endian architecture only)
                  "UTF-32BE" (big-endian architecture only)
  */
-class EncodingSchemeUtf32Native : EncodingScheme
+export class EncodingSchemeUtf32Native : EncodingScheme
 {
     /* // moved to std.internal.phobosinit
     shared static this()

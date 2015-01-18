@@ -1701,7 +1701,7 @@ alias sharSwitchLowerBound = sharMethod!switchUniformLowerBound;
         insertInPlace(arr, arr.length, value);
     }
 
-    static void destroy(T)(ref T arr)
+    static void destroy(T)(ref T arr) export
         if (isDynamicArray!T && is(Unqual!T == T))
     {
         debug
@@ -1711,7 +1711,7 @@ alias sharSwitchLowerBound = sharMethod!switchUniformLowerBound;
         arr = null;
     }
 
-    static void destroy(T)(ref T arr)
+    static void destroy(T)(ref T arr) export
         if (isDynamicArray!T && !is(Unqual!T == T))
     {
         arr = null;
@@ -1896,7 +1896,7 @@ public alias CodepointSet = InversionList!GcPolicy;
     to represent [a, b$(RPAREN) intervals of $(CODEPOINTS). As used in $(LREF InversionList).
     Any interval type should pass $(LREF isIntegralPair) trait.
 */
-public struct CodepointInterval
+public export struct CodepointInterval
 {
 pure:
     uint[2] _tuple;
@@ -1974,7 +1974,7 @@ pure:
     alias $(LREF CodepointSet) throughout the whole code base.
     )
 */
-@trusted public struct InversionList(SP=GcPolicy)
+@trusted public export struct InversionList(SP=GcPolicy)
 {
     import std.range : assumeSorted;
 
@@ -2012,7 +2012,7 @@ public:
     }
 
     //helper function that avoids sanity check to be CTFE-friendly
-    private static fromIntervals(Range)(Range intervals) pure
+    private export static fromIntervals(Range)(Range intervals) pure
     {
         import std.algorithm.iteration : map;
         import std.range : roundRobin;
@@ -2023,7 +2023,7 @@ public:
         return set;
     }
     //ditto untill sort is CTFE-able
-    private static fromIntervals()(uint[] intervals...) pure
+    private export static fromIntervals()(uint[] intervals...) pure
     in
     {
         import std.conv : text;
@@ -3078,7 +3078,7 @@ private:
         return safeWrite24(ptr, val, idx);
 }
 
-struct CowArray(SP=GcPolicy)
+export struct CowArray(SP=GcPolicy)
 {
     import std.range.primitives : hasLength;
 
@@ -3246,12 +3246,12 @@ struct CowArray(SP=GcPolicy)
 
 private:
     // ref-count is right after the data
-    @property uint refCount() const
+    @property uint refCount() const export
     {
         return data[$-1];
     }
 
-    @property void refCount(uint cnt)
+    @property void refCount(uint cnt) export
     {
         data[$-1] = cnt;
     }
@@ -4464,7 +4464,7 @@ struct clampIdx(size_t idx, size_t bits)
     Use $(LREF utfMatcher) to obtain a concrete matcher
     for UTF-8 or UTF-16 encodings.
 */
-public struct MatcherConcept
+public export struct MatcherConcept
 {
     /**
         $(P Perform a semantic equivalent 2 operations:
@@ -5652,8 +5652,7 @@ template idxTypes(Key, size_t fullBits, Prefix...)
 }
 
 //============================================================================
-
-@safe pure int comparePropertyName(Char1, Char2)(const(Char1)[] a, const(Char2)[] b)
+@safe pure export int comparePropertyName(Char1, Char2)(const(Char1)[] a, const(Char2)[] b)
     if (is(Char1 : dchar) && is(Char2 : dchar))
 {
     import std.algorithm.comparison : cmp;
@@ -5763,7 +5762,7 @@ package ubyte[] compressIntervals(Range)(Range intervals)
     return DecompressedIntervals(data);
 }
 
-@safe struct DecompressedIntervals
+@safe export struct DecompressedIntervals
 {
 pure:
     const(ubyte)[] _stream;
@@ -6003,7 +6002,7 @@ template SetSearcher(alias table, string kind)
     'White_Space', 'white-SpAce' and 'whitespace' are all considered equal
     and yield the same set of white space $(CHARACTERS).
 */
-@safe public struct unicode
+@safe public export struct unicode
 {
     /**
         Performs the lookup of set of $(CODEPOINTS)
@@ -7219,13 +7218,13 @@ int icmp(S1, S2)(S1 r1, S2 r2)
     Return a range of all $(CODEPOINTS) that casefold to
     and from this $(D ch).
 */
-package auto simpleCaseFoldings(dchar ch) @safe
+package export auto simpleCaseFoldings(dchar ch) @safe
 {
     import std.internal.unicode_tables : simpleCaseTable; // generated file
     alias sTable = simpleCaseTable;
     static struct Range
     {
-    @safe pure nothrow:
+    @safe pure nothrow export:
         uint idx; //if == uint.max, then read c.
         union
         {
@@ -7950,7 +7949,7 @@ version(std_uni_bootstrap)
 {
     // old version used for bootstrapping of gen_uni.d that generates
     // up to date optimal versions of all of isXXX functions
-    @safe pure nothrow @nogc public bool isWhite(dchar c)
+    @safe pure nothrow @nogc public export bool isWhite(dchar c)
     {
         import std.ascii : isWhite;
         return isWhite(c) ||
@@ -7990,7 +7989,7 @@ public:
     carriage return, and linefeed characters), Zs, Zl, Zp, and NEL(U+0085))
 +/
 @safe pure nothrow @nogc
-public bool isWhite(dchar c)
+export bool isWhite(dchar c)
 {
     import std.internal.unicode_tables : isWhiteGen; // generated file
     return isWhiteGen(c); // call pregenerated binary search
@@ -9385,7 +9384,7 @@ bool isSpace(dchar c)
 
 +/
 @safe pure nothrow @nogc
-bool isGraphical(dchar c)
+export bool isGraphical(dchar c)
 {
     return graphicalTrie[c];
 }
@@ -9509,8 +9508,7 @@ bool isNonCharacter(dchar c)
 private:
 // load static data from pre-generated tables into usable datastructures
 
-
-@safe auto asSet(const (ubyte)[] compressed) pure
+export @safe auto asSet(const (ubyte)[] compressed) pure
 {
     return CodepointSet.fromIntervals(decompressIntervals(compressed));
 }

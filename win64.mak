@@ -42,7 +42,10 @@ CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(SDKDIR)\Include"
 ## Location of druntime tree
 
 DRUNTIME=..\druntime
-DRUNTIMELIB=$(DRUNTIME)\lib\druntime$(MODEL).lib
+DRUNTIME_BASE=druntime$(MODEL)
+DRUNTIMELIB=$(DRUNTIME)\lib\$(DRUNTIME_BASE).lib
+DRUNTIME_SHARED_OBJ_LIST=$(DRUNTIME)\lib\$(DRUNTIME_BASE)s_objs.txt
+DRUNTIME_SHARED_DLLFIXUP=$(DRUNTIME)\lib\dllfixup$(MODEL).lib
 
 ## Flags for dmd D compiler
 
@@ -92,8 +95,10 @@ ZLIB=etc\c\zlib\zlib$(MODEL).lib
 	$(CC) -c $*
 
 LIB=phobos$(MODEL).lib
+LIB_SHARED=phobos$(MODEL)s.lib
+DLL=phobos$(MODEL)s.dll
 
-targets : $(LIB)
+targets : $(LIB) $(LIB_SHARED)
 
 test : test.exe
 
@@ -582,6 +587,13 @@ $(LIB) : $(SRC_TO_COMPILE) \
 	$(ZLIB) $(DRUNTIMELIB) win32.mak win64.mak
 	$(DMD) -lib -of$(LIB) -Xfphobos.json $(DFLAGS) $(SRC_TO_COMPILE) \
 		$(ZLIB) $(DRUNTIMELIB)
+		
+$(LIB_SHARED) : $(SRC_TO_COMPILE) \
+	$(ZLIB) $(DRUNTIME_SHARED_OBJ_LIST) $(DRUNTIME_SHARED_DLLFIXUP) win32.mak win64.mak
+	$(DMD) -shared -of$(DLL) $(DFLAGS) $(SRC_TO_COMPILE) \
+		$(ZLIB) -defaultlib="msvcrt" -L/IMPLIB:$(LIB_SHARED) -L/NODEFAULTLIB:libcmt \
+		$(DRUNTIME_SHARED_DLLFIXUP) @$(DRUNTIME_SHARED_OBJ_LIST)
+	$(AR) /OUT:$(LIB_SHARED) $(LIB_SHARED) $(DRUNTIME_SHARED_DLLFIXUP)
 
 UNITTEST_OBJS= \
 		unittest1.obj \

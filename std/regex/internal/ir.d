@@ -44,7 +44,7 @@ CharMatcher[CodepointSet] matcherCache;
 }
 
 //property for \w character class
-@property CodepointSet wordCharacter() pure
+export @property CodepointSet wordCharacter() pure
 {
     return unicode.Alphabetic | unicode.Mn | unicode.Mc
         | unicode.Me | unicode.Nd | unicode.Pc;
@@ -228,7 +228,7 @@ IR pairedIR(IR i) pure
 }
 
 //encoded IR instruction
-struct Bytecode
+export struct Bytecode
 {
 pure:
     uint raw;
@@ -356,7 +356,7 @@ static assert(Bytecode.sizeof == 4);
 
 
 //index entry structure for name --> number of submatch
-struct NamedGroup
+export struct NamedGroup
 {
     string name;
     uint group;
