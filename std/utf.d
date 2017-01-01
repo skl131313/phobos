@@ -2570,7 +2570,6 @@ wstring toUTF16(S)(S s) export
  * Encodes string $(D_PARAM s) into UTF-32 and returns the encoded string.
  */
 dstring toUTF32(scope const char[] s) @safe pure export
->>>>>>> Added support to make phobos compile into a single shared library on Windows.
 {
     dchar[] r;
     immutable slen = s.length;
