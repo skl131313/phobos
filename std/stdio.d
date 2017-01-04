@@ -4328,7 +4328,7 @@ extern(C) void std_stdio_static_this()
 }
 
 //---------
-__gshared
+export __gshared
 {
     /** The standard input stream.
         Bugs:
