@@ -38,7 +38,7 @@ Author:  David Simcha
 Copyright:  Copyright (c) 2009-2011, David Simcha.
 License:    $(HTTP boost.org/LICENSE_1_0.txt, Boost License 1.0)
 */
-module std.parallelism;
+export module std.parallelism;
 
 ///
 unittest

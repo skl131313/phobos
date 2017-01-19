@@ -18,7 +18,7 @@ Authors:   $(HTTP digitalmars.com, Walter Bright),
            Jonathan M Davis
 Source:    $(PHOBOSSRC std/_file.d)
  */
-module std.file;
+export module std.file;
 
 import core.stdc.stdlib, core.stdc.string, core.stdc.errno;
 
