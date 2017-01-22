@@ -31,13 +31,16 @@ CP=cp
 DIR=\dmd2
 
 ## Visual C directories
-VCDIR=\Program Files (x86)\Microsoft Visual Studio 10.0\VC
-SDKDIR=\Program Files (x86)\Microsoft SDKs\Windows\v7.0A
+VCDIR=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
+WINDOWSSDKDIR=C:\Program Files (x86)\Windows Kits\10
+UNIVERSALCRTSDKDIR=C:\Program Files (x86)\Windows Kits\10
+UCRTVERSION=10.0.14393.0
+LIBSUBDIR=x64
 
 ## Flags for VC compiler
 
-#CFLAGS=/Zi /nologo /I"$(VCDIR)\INCLUDE" /I"$(SDKDIR)\Include"
-CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(SDKDIR)\Include"
+#CFLAGS=/Zi /nologo /I"$(VCDIR)\INCLUDE" /I"$(UNIVERSALCRTSDKDIR)\Include\$(UCRTVERSION)\ucrt" /I"$(WINDOWSSDKDIR)"\Include
+CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(UNIVERSALCRTSDKDIR)\Include\$(UCRTVERSION)\ucrt" /I"$(WINDOWSSDKDIR)"\Include
 
 ## Location of druntime tree
 
@@ -590,8 +593,14 @@ $(LIB) : $(SRC_TO_COMPILE) \
 		
 $(LIB_SHARED) : $(SRC_TO_COMPILE) \
 	$(ZLIB) $(DRUNTIME_SHARED_OBJ_LIST) $(DRUNTIME_SHARED_DLLFIXUP) win32.mak win64.mak
+	SET LINKCMD=$(VCDIR)\bin\link.exe
+	SET VCINSTALLDIR=$(VCDIR)
+	SET UniversalCRTSdkDir=$(UNIVERSALCRTSDKDIR)
+	SET UCRTVersion=$(UCRTVERSION)
+	SET WindowsSdkDir=$(WINDOWSSDKDIR)
+	SET LIB="$(UNIVERSALCRTSDKDIR)\Lib\$(UCRTVERSION)\um\$(LIBSUBDIR)";"$(UNIVERSALCRTSDKDIR)\Lib\$(UCRTVERSION)\ucrt\$(LIBSUBDIR)"
 	$(DMD) -shared -of$(DLL) $(DFLAGS) $(SRC_TO_COMPILE) \
-		$(ZLIB) -defaultlib="msvcrt" -L/IMPLIB:imp_$(LIB_SHARED) -L/NODEFAULTLIB:libcmt \
+		$(ZLIB) -defaultlib="msvcrt" -L/IMPLIB:imp_$(LIB_SHARED) -L/NODEFAULTLIB:libcmt -L/IGNORE:4049 \
 		$(DRUNTIME_SHARED_DLLFIXUP) @$(DRUNTIME_SHARED_OBJ_LIST)
 	$(AR) /OUT:$(LIB_SHARED) imp_$(LIB_SHARED) $(DRUNTIME_SHARED_DLLFIXUP)
 
