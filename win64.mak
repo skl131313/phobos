@@ -31,13 +31,15 @@ CP=cp
 DIR=\dmd2
 
 ## Visual C directories
-VCDIR=\Program Files (x86)\Microsoft Visual Studio 10.0\VC
-SDKDIR=\Program Files (x86)\Microsoft SDKs\Windows\v7.0A
+VCDIR=\Program Files (x86)\Microsoft Visual Studio 14.0\VC
+SDKDIR=\Program Files (x86)\Windows Kits\10
+UNIVERSALCRTSDKDIR=\Program Files (x86)\Windows Kits\10
+UCRTVERSION=10.0.14393.0
 
 ## Flags for VC compiler
 
-#CFLAGS=/Zi /nologo /I"$(VCDIR)\INCLUDE" /I"$(SDKDIR)\Include"
-CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(SDKDIR)\Include"
+#CFLAGS=/Zi /nologo /I"$(VCDIR)\INCLUDE" /I"$(UNIVERSALCRTSDKDIR)\Include\$(UCRTVERSION)\ucrt"
+CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(UNIVERSALCRTSDKDIR)\Include\$(UCRTVERSION)\ucrt"
 
 ## Location of druntime tree
 
@@ -587,9 +589,10 @@ $(LIB) : $(SRC_TO_COMPILE) \
 	$(ZLIB) $(DRUNTIMELIB) win32.mak win64.mak
 	$(DMD) -lib -of$(LIB) -Xfphobos.json $(DFLAGS) $(SRC_TO_COMPILE) \
 		$(ZLIB) $(DRUNTIMELIB)
-		
+
 $(LIB_SHARED) : $(SRC_TO_COMPILE) \
 	$(ZLIB) $(DRUNTIME_SHARED_OBJ_LIST) $(DRUNTIME_SHARED_DLLFIXUP) win32.mak win64.mak
+	SET LIB="$(UNIVERSALCRTSDKDIR)\Lib\$(UCRTVERSION)\um\x64";"$(UNIVERSALCRTSDKDIR)\Lib\$(UCRTVERSION)\ucrt\x64"
 	$(DMD) -shared -of$(DLL) $(DFLAGS) $(SRC_TO_COMPILE) \
 		$(ZLIB) -defaultlib="msvcrt" -L/IMPLIB:imp_$(LIB_SHARED) -L/NODEFAULTLIB:libcmt \
 		$(DRUNTIME_SHARED_DLLFIXUP) @$(DRUNTIME_SHARED_OBJ_LIST)
