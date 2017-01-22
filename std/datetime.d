@@ -103,7 +103,7 @@ auto restoredTime = SysTime.fromISOExtString(timeString);
     Macros:
         LREF2=<a href="#$1">$(D $2)</a>
 +/
-module std.datetime;
+export module std.datetime;
 
 public import core.time;
 
@@ -28263,7 +28263,7 @@ private:
     use whatever the current time zone is on the system, even if the system's
     time zone changes while the program is running.
   +/
-final class LocalTime : TimeZone
+export final class LocalTime : TimeZone
 {
 public:
 
@@ -32640,7 +32640,7 @@ version(StdDdoc)
 }
 else version(Windows)
 {
-    SysTime SYSTEMTIMEToSysTime(const SYSTEMTIME* st, immutable TimeZone tz = LocalTime()) @safe
+    SysTime SYSTEMTIMEToSysTime(const SYSTEMTIME* st, immutable TimeZone tz = LocalTime()) @safe export
     {
         const max = SysTime.max;
 
@@ -32699,7 +32699,7 @@ else version(Windows)
     }
 
 
-    SYSTEMTIME SysTimeToSYSTEMTIME(in SysTime sysTime) @safe
+    SYSTEMTIME SysTimeToSYSTEMTIME(in SysTime sysTime) @safe export
     {
         immutable dt = cast(DateTime)sysTime;
 
@@ -32740,7 +32740,7 @@ else version(Windows)
 
     private enum hnsecsFrom1601 = 504_911_232_000_000_000L;
 
-    long FILETIMEToStdTime(const FILETIME* ft) @safe
+    long FILETIMEToStdTime(const FILETIME* ft) @safe export
     {
         ULARGE_INTEGER ul;
         ul.HighPart = ft.dwHighDateTime;
@@ -32753,7 +32753,7 @@ else version(Windows)
         return cast(long)tempHNSecs + hnsecsFrom1601;
     }
 
-    SysTime FILETIMEToSysTime(const FILETIME* ft, immutable TimeZone tz = LocalTime()) @safe
+    SysTime FILETIMEToSysTime(const FILETIME* ft, immutable TimeZone tz = LocalTime()) @safe export
     {
         auto sysTime = SysTime(FILETIMEToStdTime(ft), UTC());
         sysTime.timezone = tz;
@@ -32776,7 +32776,7 @@ else version(Windows)
     }
 
 
-    FILETIME stdTimeToFILETIME(long stdTime) @safe
+    FILETIME stdTimeToFILETIME(long stdTime) @safe export
     {
         if (stdTime < hnsecsFrom1601)
             throw new DateTimeException("The given stdTime value cannot be represented as a FILETIME.");
@@ -32791,7 +32791,7 @@ else version(Windows)
         return ft;
     }
 
-    FILETIME SysTimeToFILETIME(SysTime sysTime) @safe
+    FILETIME SysTimeToFILETIME(SysTime sysTime) @safe export
     {
         return stdTimeToFILETIME(sysTime.stdTime);
     }

@@ -1168,6 +1168,8 @@ clean:
 	del $(DOCS)
 	del $(UNITTEST_OBJS) unittest.obj unittest.exe
 	del $(LIB)
+	del $(LIB_SHARED)
+	del $(DLL)
 	del phobos.json
 
 cleanhtml:
