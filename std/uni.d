@@ -614,7 +614,7 @@ CHARACTER = $(S_LINK Character, character)
 CHARACTERS = $(S_LINK Character, characters)
 CLUSTER = $(S_LINK Grapheme cluster, grapheme cluster)
 +/
-module std.uni;
+export module std.uni;
 
 import std.meta; // AliasSeq
 import std.range.primitives; // back, ElementEncodingType, ElementType, empty,
@@ -6598,7 +6598,7 @@ Range byCodePoint(Range)(Range range)
 
     See_Also: $(LREF decodeGrapheme), $(LREF graphemeStride)
 +/
-@trusted struct Grapheme
+@trusted export struct Grapheme
 {
     import std.exception : enforce;
     import std.traits : isDynamicArray;
