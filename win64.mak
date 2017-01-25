@@ -590,7 +590,7 @@ $(LIB) : $(SRC_TO_COMPILE) \
 	$(ZLIB) $(DRUNTIMELIB) win32.mak win64.mak
 	$(DMD) -lib -of$(LIB) -Xfphobos.json $(DFLAGS) $(SRC_TO_COMPILE) \
 		$(ZLIB) $(DRUNTIMELIB)
-		
+
 $(LIB_SHARED) : $(SRC_TO_COMPILE) \
 	$(ZLIB) $(DRUNTIME_SHARED_OBJ_LIST) $(DRUNTIME_SHARED_DLLFIXUP) win32.mak win64.mak
 	SET LINKCMD=$(VCDIR)\bin\link.exe
@@ -689,11 +689,11 @@ CC32=$(CC)\..\..\cl
 
 # build phobos32mscoff.lib
 phobos32mscoff:
-	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)"
+	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff LIBSUBDIR=x86 "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)"
 
 # run unittests for 32-bit COFF version
 unittest32mscoff:
-	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)" unittest
+	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff LIBSUBDIR=x86 "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)" unittest
 
 ######################################################
 
