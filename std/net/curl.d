@@ -154,7 +154,7 @@ Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
          http://www.boost.org/LICENSE_1_0.txt)
 */
-module std.net.curl;
+export module std.net.curl;
 
 import core.thread;
 import etc.c.curl;
@@ -366,13 +366,13 @@ CALLBACK_PARAMS = $(TABLE ,
 struct AutoProtocol { }
 
 // Returns true if the url points to an FTP resource
-private bool isFTPUrl(const(char)[] url)
+private export bool isFTPUrl(const(char)[] url)
 {
     return startsWith(url.toLower(), "ftp://", "ftps://", "ftp.") != 0;
 }
 
 // Is true if the Conn type is a valid Curl Connection type.
-private template isCurlConn(Conn)
+private export template isCurlConn(Conn)
 {
     enum auto isCurlConn = is(Conn : HTTP) ||
         is(Conn : FTP) || is(Conn : AutoProtocol);
@@ -1864,7 +1864,6 @@ private void _asyncDuplicateConnection(Conn, PostData)
 */
 private mixin template Protocol()
 {
-
     /// Value to return from $(D onSend)/$(D onReceive) delegates in order to
     /// pause a request
     alias requestPause = CurlReadFunc.pause;
@@ -2326,7 +2325,7 @@ private bool decodeLineInto(Terminator, Char = char)(ref const(ubyte)[] basesrc,
   * See_Also: $(HTTP www.ietf.org/rfc/rfc2616.txt, RFC2616)
   *
   */
-struct HTTP
+export struct HTTP
 {
     mixin Protocol;
 
@@ -2335,7 +2334,7 @@ struct HTTP
 
     static private uint defaultMaxRedirects = 10;
 
-    private struct Impl
+    private export struct Impl
     {
         ~this()
         {
@@ -3225,12 +3224,12 @@ unittest // charset/Charset/CHARSET/...
 
    See_Also: $(HTTP tools.ietf.org/html/rfc959, RFC959)
 */
-struct FTP
+export struct FTP
 {
 
     mixin Protocol;
 
-    private struct Impl
+    private export struct Impl
     {
         ~this()
         {
@@ -3625,7 +3624,7 @@ struct SMTP
 {
     mixin Protocol;
 
-    private struct Impl
+    private export struct Impl
     {
         ~this()
         {
@@ -3936,7 +3935,7 @@ struct SMTP
 /++
     Exception thrown on errors in std.net.curl functions.
 +/
-class CurlException : Exception
+export class CurlException : Exception
 {
     /++
         Params:
@@ -3958,7 +3957,7 @@ class CurlException : Exception
 /++
     Exception thrown on timeout errors in std.net.curl functions.
 +/
-class CurlTimeoutException : CurlException
+export class CurlTimeoutException : CurlException
 {
     /++
         Params:
@@ -4112,7 +4111,7 @@ private struct CurlAPI
   when passing Curl to other functions. Otherwise always allocate on
   the heap.
 */
-struct Curl
+export struct Curl
 {
     alias OutData = void[];
     alias InData = ubyte[];
