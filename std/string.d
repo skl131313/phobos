@@ -146,7 +146,7 @@ Authors: $(HTTP digitalmars.com, Walter Bright),
 Source:    $(PHOBOSSRC std/_string.d)
 
 */
-module std.string;
+export module std.string;
 
 //debug=string;                 // uncomment to turn on debugging trustedPrintf's
 
@@ -207,7 +207,7 @@ public import std.array : join, replace, replaceInPlace, split, empty;
 /++
     Exception thrown on errors in std.string functions.
   +/
-class StringException : Exception
+export class StringException : Exception
 {
     import std.exception : basicExceptionCtors;
 
@@ -227,7 +227,7 @@ class StringException : Exception
     The original data is not changed and not copied.
 +/
 
-inout(char)[] fromStringz(inout(char)* cString) @nogc @system pure nothrow {
+export inout(char)[] fromStringz(inout(char)* cString) @nogc @system pure nothrow {
     import core.stdc.string : strlen;
     return cString ? cString[0 .. strlen(cString)] : null;
 }
@@ -254,7 +254,7 @@ inout(char)[] fromStringz(inout(char)* cString) @nogc @system pure nothrow {
     garbage collection cycle and cause a nasty bug when the C code tries to use
     it.
   +/
-immutable(char)* toStringz(const(char)[] s) @trusted pure nothrow
+export immutable(char)* toStringz(const(char)[] s) @trusted pure nothrow
 out (result)
 {
     import core.stdc.string : strlen, memcmp;
@@ -293,7 +293,7 @@ body
 }
 
 /++ Ditto +/
-immutable(char)* toStringz(in string s) @trusted pure nothrow
+export immutable(char)* toStringz(in string s) @trusted pure nothrow
 {
     if (s.empty) return "".ptr;
     /* Peek past end of s[], if it's 0, no conversion necessary.
@@ -2241,7 +2241,7 @@ ptrdiff_t lastIndexOfNeither(Char,Char2)(const(Char)[] haystack,
  * Returns:
  *     The _representation of the passed string.
  */
-auto representation(Char)(Char[] s) @safe pure nothrow @nogc
+auto representation(Char)(Char[] s) @safe pure nothrow @nogc export
     if (isSomeChar!Char)
 {
     import std.traits : ModifyTypePreservingTQ;
@@ -5096,7 +5096,7 @@ body
  *
  * Use $(LREF makeTransTable) instead.
  */
-string makeTrans(in char[] from, in char[] to) @trusted pure nothrow
+export string makeTrans(in char[] from, in char[] to) @trusted pure nothrow
 {
     return makeTransTable(from, to)[].idup;
 }
@@ -5121,7 +5121,7 @@ string makeTrans(in char[] from, in char[] to) @trusted pure nothrow
  *      translation array
  */
 
-char[256] makeTransTable(in char[] from, in char[] to) @safe pure nothrow @nogc
+export char[256] makeTransTable(in char[] from, in char[] to) @safe pure nothrow @nogc
 in
 {
     import std.ascii : isASCII;
@@ -6346,7 +6346,7 @@ body
  * entered that uniquely identify it.
  */
 
-string[string] abbrev(string[] values) @safe pure
+export string[string] abbrev(string[] values) @safe pure
 {
     import std.algorithm.sorting : sort;
 
@@ -6921,7 +6921,7 @@ Returns:
 
 See_Also: $(LREF representation)
 */
-auto assumeUTF(T)(T[] arr) pure
+auto assumeUTF(T)(T[] arr) pure export
     if (staticIndexOf!(Unqual!T, ubyte, ushort, uint) != -1)
 {
     import std.traits : ModifyTypePreservingTQ;
