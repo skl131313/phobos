@@ -103,7 +103,7 @@ auto restoredTime = SysTime.fromISOExtString(timeString);
     Macros:
         LREF2=<a href="#$1">$(D $2)</a>
 +/
-module std.datetime;
+export module std.datetime;
 
 public import core.time;
 
@@ -283,8 +283,8 @@ alias AutoStart = Flag!"autoStart";
    $(D "minutes"), $(D "hours"), $(D "days"), $(D "weeks"), $(D "months"), and
    $(D "years")
   +/
-immutable string[] timeStrings = ["hnsecs", "usecs", "msecs", "seconds", "minutes",
-                                  "hours", "days", "weeks", "months", "years"];
+export immutable string[] timeStrings = ["hnsecs", "usecs", "msecs", "seconds", "minutes",
+                                         "hours", "days", "weeks", "months", "years"];
 
 
 //==============================================================================
@@ -302,7 +302,7 @@ alias DateTimeException = TimeException;
     Effectively a namespace to make it clear that the methods it contains are
     getting the time from the system clock. It cannot be instantiated.
  +/
-final class Clock
+export final class Clock
 {
 public:
 
@@ -598,7 +598,7 @@ private:
     $(D SysTime)'s range is from approximately 29,000 B.C. to approximately
     29,000 A.D.
   +/
-struct SysTime
+export struct SysTime
 {
     import core.stdc.time : tm;
     version(Posix) import core.sys.posix.sys.time : timeval;
@@ -9184,13 +9184,12 @@ public:
         assert(SysTime.max > SysTime.min);
     }
 
-
 private:
 
     /+
         Returns $(D stdTime) converted to $(LREF SysTime)'s time zone.
       +/
-    @property long adjTime() @safe const nothrow
+    @property export long adjTime() @safe const nothrow
     {
         return _timezone.utcToTZ(_stdTime);
     }
@@ -9199,7 +9198,7 @@ private:
     /+
         Converts the given hnsecs from $(LREF SysTime)'s time zone to std time.
       +/
-    @property void adjTime(long adjTime) @safe nothrow
+    @property export void adjTime(long adjTime) @safe nothrow
     {
         _stdTime = _timezone.tzToUTC(adjTime);
     }
@@ -9237,7 +9236,7 @@ private:
 
     Year 0 is a leap year.
  +/
-struct Date
+export struct Date
 {
 public:
 
@@ -13359,7 +13358,7 @@ private:
         Params:
             days = The number of days to add to this Date.
       +/
-    ref Date _addDays(long days) return @safe pure nothrow
+    export ref Date _addDays(long days) return @safe pure nothrow
     {
         dayOfGregorianCal = cast(int)(dayOfGregorianCal + days);
         return this;
@@ -13545,7 +13544,7 @@ private:
     Represents a time of day with hours, minutes, and seconds. It uses 24 hour
     time.
 +/
-struct TimeOfDay
+export struct TimeOfDay
 {
 public:
 
@@ -14671,7 +14670,6 @@ public:
         assert(TimeOfDay.max > TimeOfDay.min);
     }
 
-
 private:
 
     /+
@@ -14685,7 +14683,7 @@ private:
         Params:
             seconds = The number of seconds to add to this TimeOfDay.
       +/
-    ref TimeOfDay _addSeconds(long seconds) return @safe pure nothrow
+    export ref TimeOfDay _addSeconds(long seconds) return @safe pure nothrow
     {
         long hnsecs = convert!("seconds", "hnsecs")(seconds);
         hnsecs += convert!("hours", "hnsecs")(_hour);
@@ -14819,7 +14817,7 @@ private:
    precision (hnsecs). $(D DateTime) is intended primarily for calendar-based
    uses rather than precise time operations.
   +/
-struct DateTime
+export struct DateTime
 {
 public:
 
@@ -18104,7 +18102,6 @@ public:
         assert(DateTime.max > DateTime.min);
     }
 
-
 private:
 
     /+
@@ -18116,7 +18113,7 @@ private:
         Params:
             seconds = The number of seconds to add to this $(LREF DateTime).
       +/
-    ref DateTime _addSeconds(long seconds) return @safe pure nothrow
+    export ref DateTime _addSeconds(long seconds) return @safe pure nothrow
     {
         long hnsecs = convert!("seconds", "hnsecs")(seconds);
         hnsecs += convert!("hours", "hnsecs")(_tod._hour);
@@ -27557,7 +27554,7 @@ private:
     Represents a time zone. It is used with $(LREF SysTime) to indicate the time
     zone of a $(LREF SysTime).
   +/
-abstract class TimeZone
+export abstract class TimeZone
 {
 public:
 
@@ -28147,7 +28144,7 @@ private:
     use whatever the current time zone is on the system, even if the system's
     time zone changes while the program is running.
   +/
-final class LocalTime : TimeZone
+export final class LocalTime : TimeZone
 {
 public:
 
@@ -28719,7 +28716,7 @@ private:
 /++
     A $(LREF2 .TimeZone, TimeZone) which represents UTC.
   +/
-final class UTC : TimeZone
+export final class UTC : TimeZone
 {
 public:
 
@@ -28851,7 +28848,7 @@ private:
     the TZ Database, obviously it's not likely to be following the exact rules
     of any of the time zones in the TZ Database, so it makes no sense to set it.
   +/
-final class SimpleTimeZone : TimeZone
+export final class SimpleTimeZone : TimeZone
 {
 public:
 
@@ -29413,7 +29410,7 @@ private:
         $(HTTP en.wikipedia.org/wiki/List_of_tz_database_time_zones, List of Time
           Zones)
   +/
-final class PosixTimeZone : TimeZone
+export final class PosixTimeZone : TimeZone
 {
     import std.algorithm.searching : countUntil, canFind, startsWith;
     import std.file : isDir, isFile, exists, dirEntries, SpanMode, DirEntry;
@@ -30351,7 +30348,7 @@ version(StdDdoc)
         See_Also:
             $(HTTP www.iana.org/time-zones, Home of the TZ Database files)
       +/
-    final class WindowsTimeZone : TimeZone
+    export final class WindowsTimeZone : TimeZone
     {
     public:
 
@@ -30454,7 +30451,7 @@ version(StdDdoc)
 }
 else version(Windows)
 {
-    final class WindowsTimeZone : TimeZone
+    export final class WindowsTimeZone : TimeZone
     {
         import std.algorithm.sorting : sort;
         import std.array : appender;
@@ -30868,7 +30865,7 @@ else version(Posix)
     auto conversions2 = parseTZConversions(std.net.curl.get(url));
 --------------------
   +/
-struct TZConversions
+export struct TZConversions
 {
     /++
         The key is the Windows time zone name, and the value is a list of
@@ -30886,7 +30883,7 @@ struct TZConversions
 }
 
 /++ ditto +/
-TZConversions parseTZConversions(string windowsZonesXMLText) @safe pure
+export TZConversions parseTZConversions(string windowsZonesXMLText) @safe pure
 {
     // This is a bit hacky, since it doesn't properly read XML, but it avoids
     // needing to pull in std.xml (which we're theoretically replacing at some
@@ -31056,7 +31053,7 @@ For terms of use, see http://www.unicode.org/copyright.html
         tzName = The TZ Database name to convert.
   +/
 deprecated("Use parseTZConversions instead")
-string tzDatabaseNameToWindowsTZName(string tzName) @safe pure nothrow @nogc
+export string tzDatabaseNameToWindowsTZName(string tzName) @safe pure nothrow @nogc
 {
     switch (tzName)
     {
@@ -31543,7 +31540,7 @@ version(Windows) version(UpdateWindowsTZTranslations) deprecated @system unittes
         tzName = The TZ Database name to convert.
   +/
 deprecated("Use parseTZConversions instead")
-string windowsTZNameToTZDatabaseName(string tzName) @safe pure nothrow @nogc
+export string windowsTZNameToTZDatabaseName(string tzName) @safe pure nothrow @nogc
 {
     switch (tzName)
     {
@@ -31720,7 +31717,7 @@ version(Windows) version(UpdateWindowsTZTranslations) deprecated @system unittes
    and situation-dependent stuff (such as the overhead of a context switch
    between threads) can also affect $(D StopWatch)'s accuracy.
   +/
-@safe struct StopWatch
+@safe export struct StopWatch
 {
 public:
 
@@ -32018,7 +32015,7 @@ TickDuration[fun.length] benchmark(fun...)(uint n)
 /++
    Return value of benchmark with two functions comparing.
   +/
-@safe struct ComparingBenchmarkResult
+@safe export struct ComparingBenchmarkResult
 {
     /++
        Evaluation value
@@ -32052,7 +32049,7 @@ TickDuration[fun.length] benchmark(fun...)(uint n)
 
 private:
 
-    this(TickDuration baseTime, TickDuration targetTime) pure nothrow
+    export this(TickDuration baseTime, TickDuration targetTime) pure nothrow
     {
         _baseTime = baseTime;
         _targetTime = targetTime;
@@ -32206,7 +32203,7 @@ private:
     Params:
         year = The year to to be tested.
  +/
-static bool yearIsLeapYear(int year) @safe pure nothrow
+export static bool yearIsLeapYear(int year) @safe pure nothrow
 {
     if (year % 400 == 0)
         return true;
@@ -32261,7 +32258,7 @@ static bool yearIsLeapYear(int year) @safe pure nothrow
     See_Also:
         SysTime.fromUnixTime
   +/
-long unixTimeToStdTime(long unixTime) @safe pure nothrow
+export long unixTimeToStdTime(long unixTime) @safe pure nothrow
 {
     return 621_355_968_000_000_000L + convert!("seconds", "hnsecs")(unixTime);
 }
@@ -32524,7 +32521,7 @@ version(StdDdoc)
 }
 else version(Windows)
 {
-    SysTime SYSTEMTIMEToSysTime(const SYSTEMTIME* st, immutable TimeZone tz = LocalTime()) @safe
+    SysTime SYSTEMTIMEToSysTime(const SYSTEMTIME* st, immutable TimeZone tz = LocalTime()) @safe export
     {
         const max = SysTime.max;
 
@@ -32583,7 +32580,7 @@ else version(Windows)
     }
 
 
-    SYSTEMTIME SysTimeToSYSTEMTIME(in SysTime sysTime) @safe
+    SYSTEMTIME SysTimeToSYSTEMTIME(in SysTime sysTime) @safe export
     {
         immutable dt = cast(DateTime)sysTime;
 
@@ -32624,7 +32621,7 @@ else version(Windows)
 
     private enum hnsecsFrom1601 = 504_911_232_000_000_000L;
 
-    long FILETIMEToStdTime(const FILETIME* ft) @safe
+    long FILETIMEToStdTime(const FILETIME* ft) @safe export
     {
         ULARGE_INTEGER ul;
         ul.HighPart = ft.dwHighDateTime;
@@ -32637,7 +32634,7 @@ else version(Windows)
         return cast(long)tempHNSecs + hnsecsFrom1601;
     }
 
-    SysTime FILETIMEToSysTime(const FILETIME* ft, immutable TimeZone tz = LocalTime()) @safe
+    SysTime FILETIMEToSysTime(const FILETIME* ft, immutable TimeZone tz = LocalTime()) @safe export
     {
         auto sysTime = SysTime(FILETIMEToStdTime(ft), UTC());
         sysTime.timezone = tz;
@@ -32660,7 +32657,7 @@ else version(Windows)
     }
 
 
-    FILETIME stdTimeToFILETIME(long stdTime) @safe
+    FILETIME stdTimeToFILETIME(long stdTime) @safe export
     {
         if (stdTime < hnsecsFrom1601)
             throw new DateTimeException("The given stdTime value cannot be represented as a FILETIME.");
@@ -32675,7 +32672,7 @@ else version(Windows)
         return ft;
     }
 
-    FILETIME SysTimeToFILETIME(SysTime sysTime) @safe
+    FILETIME SysTimeToFILETIME(SysTime sysTime) @safe export
     {
         return stdTimeToFILETIME(sysTime.stdTime);
     }
@@ -32712,7 +32709,7 @@ alias DosFileTime = uint;
     Throws:
         $(LREF DateTimeException) if the $(D DosFileTime) is invalid.
   +/
-SysTime DosFileTimeToSysTime(DosFileTime dft, immutable TimeZone tz = LocalTime()) @safe
+export SysTime DosFileTimeToSysTime(DosFileTime dft, immutable TimeZone tz = LocalTime()) @safe
 {
     uint dt = cast(uint)dft;
 
@@ -32755,7 +32752,7 @@ SysTime DosFileTimeToSysTime(DosFileTime dft, immutable TimeZone tz = LocalTime(
         $(LREF DateTimeException) if the given $(LREF SysTime) cannot be converted to
         a $(D DosFileTime).
   +/
-DosFileTime SysTimeToDosFileTime(SysTime sysTime) @safe
+export DosFileTime SysTimeToDosFileTime(SysTime sysTime) @safe
 {
     auto dateTime = cast(DateTime)sysTime;
 
@@ -33593,7 +33590,7 @@ bool validTimeUnits(string[] units...) @safe pure nothrow
         $(LREF DateTimeException) if either of the given strings is not a valid
         time unit string.
  +/
-int cmpTimeUnits(string lhs, string rhs) @safe pure
+export int cmpTimeUnits(string lhs, string rhs) @safe pure
 {
     import std.algorithm.searching : countUntil;
     import std.format : format;
@@ -33823,7 +33820,7 @@ void enforceValid(string units)
         currMonth = The current month of the year.
         month     = The month of the year to get the number of months to.
   +/
-static int monthsToMonth(int currMonth, int month) @safe pure
+export static int monthsToMonth(int currMonth, int month) @safe pure
 {
     enforceValid!"months"(currMonth);
     enforceValid!"months"(month);
@@ -33901,7 +33898,7 @@ static int monthsToMonth(int currMonth, int month) @safe pure
         currDoW = The current day of the week.
         dow     = The day of the week to get the number of days to.
   +/
-static int daysToDayOfWeek(DayOfWeek currDoW, DayOfWeek dow) @safe pure nothrow
+export static int daysToDayOfWeek(DayOfWeek currDoW, DayOfWeek dow) @safe pure nothrow
 {
     if (currDoW == dow)
         return 0;
@@ -34289,7 +34286,7 @@ long removeUnitsFromHNSecs(string units)(long hnsecs) @safe pure nothrow
         year  = The year to get the day for.
         month = The month of the Gregorian Calendar to get the day for.
  +/
-static ubyte maxDay(int year, int month) @safe pure nothrow
+export ubyte maxDay(int year, int month) @safe pure nothrow
 in
 {
     assert(valid!"months"(month));
@@ -34465,7 +34462,7 @@ string monthToString(Month month) @safe pure
     Throws:
         $(LREF DateTimeException) if the given month is not a valid month string.
   +/
-Month monthFromString(string monthStr) @safe pure
+export Month monthFromString(string monthStr) @safe pure
 {
     import std.format : format;
     switch (monthStr)
