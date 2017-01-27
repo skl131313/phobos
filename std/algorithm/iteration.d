@@ -63,7 +63,7 @@ Source: $(PHOBOSSRC std/algorithm/_iteration.d)
 Macros:
 T2=$(TR $(TDNW $(LREF $1)) $(TD $+))
  */
-module std.algorithm.iteration;
+export module std.algorithm.iteration;
 
 // FIXME
 import std.functional; // : unaryFun, binaryFun;
@@ -1121,7 +1121,7 @@ template filter(alias predicate) if (is(typeof(unaryFun!predicate)))
     assert(approxEqual(r1, [ 2.5 ]));
 }
 
-private struct FilterResult(alias pred, Range)
+private export struct FilterResult(alias pred, Range)
 {
     alias R = Unqual!Range;
     R _input;
