@@ -181,7 +181,7 @@ Authors: $(HTTP erdani.com, Andrei Alexandrescu), David Simcha, Jonathan M Davis
 and Jack Stouffer. Credit for some of the ideas in building this module goes
 to $(HTTP fantascienza.net/leonardo/so/, Leonardo Maffi).
  */
-module std.range;
+export module std.range;
 
 public import std.range.primitives;
 public import std.range.interfaces;
