@@ -55,7 +55,7 @@
  * Macros:
  *      LREF2=<a href="#$1">$(D $2)</a>
  */
-module std.base64;
+export module std.base64;
 
 import std.exception;  // enforce
 import std.range.primitives;      // isInputRange, isOutputRange, isForwardRange, ElementType, hasLength
@@ -125,7 +125,7 @@ alias Base64URL = Base64Impl!('-', '_');
  * Encoded strings will not have any padding if the $(D Padding) parameter is
  * set to $(D NoPadding).
  */
-template Base64Impl(char Map62th, char Map63th, char Padding = '=')
+export template Base64Impl(char Map62th, char Map63th, char Padding = '=')
 {
     enum NoPadding = '\0';  /// represents no-padding encoding
 
@@ -1725,7 +1725,7 @@ template Base64Impl(char Map62th, char Map63th, char Padding = '=')
 /**
  * Exception thrown upon encountering Base64 encoding or decoding errors.
  */
-class Base64Exception : Exception
+export class Base64Exception : Exception
 {
     @safe pure nothrow
     this(string s, string fn = __FILE__, size_t ln = __LINE__)
