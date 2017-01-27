@@ -16,7 +16,7 @@ Authors:   $(HTTP digitalmars.com, Walter Bright),
 Source:    $(PHOBOSSRC std/_conv.d)
 
 */
-module std.conv;
+export module std.conv;
 
 public import std.ascii : LetterCase;
 
@@ -38,19 +38,19 @@ package template convFormat()
 /**
  * Thrown on conversion errors.
  */
-class ConvException : Exception
+export class ConvException : Exception
 {
     import std.exception : basicExceptionCtors;
     ///
     mixin basicExceptionCtors;
 }
 
-private string convError_unexpected(S)(S source)
+private export string convError_unexpected(S)(S source)
 {
     return source.empty ? "end of input" : text("'", source.front, "'");
 }
 
-private auto convError(S, T)(S source, string fn = __FILE__, size_t ln = __LINE__)
+private export auto convError(S, T)(S source, string fn = __FILE__, size_t ln = __LINE__)
 {
     return new ConvException(
         text("Unexpected ", convError_unexpected(source),
@@ -58,7 +58,7 @@ private auto convError(S, T)(S source, string fn = __FILE__, size_t ln = __LINE_
         fn, ln);
 }
 
-private auto convError(S, T)(S source, int radix, string fn = __FILE__, size_t ln = __LINE__)
+private export auto convError(S, T)(S source, int radix, string fn = __FILE__, size_t ln = __LINE__)
 {
     return new ConvException(
         text("Unexpected ", convError_unexpected(source),
@@ -67,7 +67,7 @@ private auto convError(S, T)(S source, int radix, string fn = __FILE__, size_t l
         fn, ln);
 }
 
-@safe pure/* nothrow*/  // lazy parameter bug
+@safe pure/* nothrow*/ export // lazy parameter bug
 private auto parseError(lazy string msg, string fn = __FILE__, size_t ln = __LINE__)
 {
     return new ConvException(text("Can't parse string: ", msg), fn, ln);
@@ -124,7 +124,7 @@ private
 /**
  * Thrown on conversion overflow errors.
  */
-class ConvOverflowException : ConvException
+export class ConvOverflowException : ConvException
 {
     @safe pure nothrow
     this(string s, string fn = __FILE__, size_t ln = __LINE__)
@@ -162,7 +162,7 @@ $(I UnsignedInteger):
     $(I DecimalDigit) $(I UnsignedInteger)
 </pre>
  */
-template to(T)
+export template to(T)
 {
     T to(A...)(A args)
         if (A.length > 0)
@@ -408,7 +408,7 @@ template to(T)
 If the source type is implicitly convertible to the target type, $(D
 to) simply performs the implicit conversion.
  */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (isImplicitlyConvertible!(S, T) &&
         !isEnumStrToStr!(S, T) && !isNullToStr!(S, T))
 {
@@ -522,7 +522,7 @@ private T toImpl(T, S)(S value)
 /*
   Converting static arrays forwards to their dynamic counterparts.
  */
-private T toImpl(T, S)(ref S s)
+private export T toImpl(T, S)(ref S s)
     if (isStaticArray!S)
 {
     return toImpl!(T, typeof(s[0])[])(s);
@@ -538,7 +538,7 @@ private T toImpl(T, S)(ref S s)
 /**
 When source type supports member template function opCast, it is used.
 */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (!isImplicitlyConvertible!(S, T) &&
         is(typeof(S.init.opCast!T()) : T) &&
         !isExactSomeString!T &&
@@ -589,7 +589,7 @@ When target type supports 'converting construction', it is used.
 $(UL $(LI If target type is struct, $(D T(value)) is used.)
      $(LI If target type is class, $(D new T(value)) is used.))
 */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (!isImplicitlyConvertible!(S, T) &&
         is(T == struct) && is(typeof(T(value))))
 {
@@ -638,7 +638,7 @@ private T toImpl(T, S)(S value)
 }
 
 /// ditto
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (!isImplicitlyConvertible!(S, T) &&
         is(T == class) && is(typeof(new T(value))))
 {
@@ -711,7 +711,7 @@ private T toImpl(T, S)(S value)
 Object-to-object conversions by dynamic casting throw exception when the source is
 non-null and the target is null.
  */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (!isImplicitlyConvertible!(S, T) &&
         (is(S == class) || is(S == interface)) && !is(typeof(value.opCast!T()) : T) &&
         (is(T == class) || is(T == interface)) && !is(typeof(new T(value))))
@@ -831,7 +831,7 @@ private T toImpl(T, S)(S value)
 /**
 Handles type _to string conversions
 */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (!(isImplicitlyConvertible!(S, T) &&
           !isEnumStrToStr!(S, T) && !isNullToStr!(S, T)) &&
         !isInfinite!S && isExactSomeString!T)
@@ -1228,7 +1228,7 @@ if (is (T == immutable) && isExactSomeString!T && is(S == enum))
 }
 
 // ditto
-@trusted pure private T toImpl(T, S)(S value, uint radix, LetterCase letterCase = LetterCase.upper)
+@trusted pure export private T toImpl(T, S)(S value, uint radix, LetterCase letterCase = LetterCase.upper)
     if (isIntegral!S &&
         isExactSomeString!T)
 in
@@ -1308,7 +1308,7 @@ body
 Narrowing numeric-numeric conversions throw when the value does not
 fit in the narrower type.
  */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (!isImplicitlyConvertible!(S, T) &&
         (isNumeric!S || isSomeChar!S || isBoolean!S) &&
         (isNumeric!T || isSomeChar!T || isBoolean!T) && !is(T == enum))
@@ -1401,7 +1401,7 @@ private T toImpl(T, S)(S value)
 Array-to-array conversion (except when target is a string type)
 converts each element in turn by using $(D to).
  */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (!isImplicitlyConvertible!(S, T) &&
         !isSomeString!S && isDynamicArray!S &&
         !isExactSomeString!T && isArray!T)
@@ -1483,7 +1483,7 @@ private T toImpl(T, S)(S value)
 Associative array to associative array conversion converts each key
 and each value in turn.
  */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (isAssociativeArray!S &&
         isAssociativeArray!T && !is(T == enum))
 {
@@ -1713,7 +1713,7 @@ $(UL
        string and then parsed.)
   $(LI When the source is a narrow string, normal text parsing occurs.))
 */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (isInputRange!S && isSomeChar!(ElementEncodingType!S) &&
         !isExactSomeString!T && is(typeof(parse!T(value))))
 {
@@ -1728,7 +1728,7 @@ private T toImpl(T, S)(S value)
 }
 
 /// ditto
-private T toImpl(T, S)(S value, uint radix)
+private export T toImpl(T, S)(S value, uint radix)
     if (isInputRange!S && isSomeChar!(ElementEncodingType!S) &&
         !isExactSomeString!T && is(typeof(parse!T(value, radix))))
 {
@@ -1787,7 +1787,7 @@ into an Enum value. If the value does not match any enum member values
 a ConvException is thrown.
 Enums with floating-point or string base types are not supported.
 */
-private T toImpl(T, S)(S value)
+private export T toImpl(T, S)(S value)
     if (is(T == enum) && !is(S == enum)
         && is(typeof(value == OriginalType!T.init))
         && !isFloatingPoint!(OriginalType!T) && !isSomeString!(OriginalType!T))
@@ -1885,7 +1885,7 @@ Note:
     All character input range conversions using $(LREF to) are forwarded
     to `parse` and do not require lvalues.
 */
-Target parse(Target, Source)(ref Source s)
+export Target parse(Target, Source)(ref Source s)
     if (isInputRange!Source &&
         isSomeChar!(ElementType!Source) &&
         is(Unqual!Target == bool))
@@ -1966,7 +1966,7 @@ Throws:
     A $(LREF ConvException) If an overflow occurred during conversion or
     if no character of the input was meaningfully converted.
 */
-Target parse(Target, Source)(ref Source s)
+export Target parse(Target, Source)(ref Source s)
     if (isSomeChar!(ElementType!Source) &&
         isIntegral!Target && !is(Target == enum))
 {
@@ -2329,7 +2329,7 @@ Lerr:
 }
 
 /// ditto
-Target parse(Target, Source)(ref Source s, uint radix)
+export Target parse(Target, Source)(ref Source s, uint radix)
     if (isSomeChar!(ElementType!Source) &&
         isIntegral!Target && !is(Target == enum))
 in
@@ -2434,7 +2434,7 @@ Lerr:
  *     A $(LREF ConvException) if type `Target` does not have a member
  *     represented by `s`.
  */
-Target parse(Target, Source)(ref Source s)
+export Target parse(Target, Source)(ref Source s)
     if (isSomeString!Source && !is(Source == enum) &&
         is(Target == enum))
 {
@@ -2517,7 +2517,7 @@ Target parse(Target, Source)(ref Source s)
  *     A $(LREF ConvException) if `p` is empty, if no number could be
  *     parsed, or if an overflow occurred.
  */
-Target parse(Target, Source)(ref Source source)
+export Target parse(Target, Source)(ref Source source)
     if (isInputRange!Source && isSomeChar!(ElementType!Source) && !is(Source == enum) &&
         isFloatingPoint!Target && !is(Target == enum))
 {
@@ -3217,7 +3217,7 @@ Returns:
 Throws:
     A $(LREF ConvException) if the range is empty.
  */
-Target parse(Target, Source)(ref Source s)
+export Target parse(Target, Source)(ref Source s)
     if (isSomeString!Source && !is(Source == enum) &&
         staticIndexOf!(Unqual!Target, dchar, Unqual!(ElementEncodingType!Source)) >= 0)
 {
@@ -3256,7 +3256,7 @@ Target parse(Target, Source)(ref Source s)
 }
 
 /// ditto
-Target parse(Target, Source)(ref Source s)
+export Target parse(Target, Source)(ref Source s)
     if (!isSomeString!Source && isInputRange!Source && isSomeChar!(ElementType!Source) &&
         isSomeChar!Target && Target.sizeof >= ElementType!Source.sizeof && !is(Target == enum))
 {
@@ -3319,7 +3319,7 @@ Returns:
 Throws:
     A $(LREF ConvException) if the range doesn't represent `null`.
  */
-Target parse(Target, Source)(ref Source s)
+export Target parse(Target, Source)(ref Source s)
     if (isInputRange!Source &&
         isSomeChar!(ElementType!Source) &&
         is(Unqual!Target == typeof(null)))
@@ -3386,7 +3386,7 @@ package void skipWS(R)(ref R r)
  * '[')), right bracket (default $(D ']')), and element separator (by
  * default $(D ',')). A trailing separator is allowed.
  */
-Target parse(Target, Source)(ref Source s, dchar lbracket = '[', dchar rbracket = ']', dchar comma = ',')
+export Target parse(Target, Source)(ref Source s, dchar lbracket = '[', dchar rbracket = ']', dchar comma = ',')
     if (isExactSomeString!Source &&
         isDynamicArray!Target && !is(Target == enum))
 {
@@ -3517,7 +3517,7 @@ Target parse(Target, Source)(ref Source s, dchar lbracket = '[', dchar rbracket 
 }
 
 /// ditto
-Target parse(Target, Source)(ref Source s, dchar lbracket = '[', dchar rbracket = ']', dchar comma = ',')
+export Target parse(Target, Source)(ref Source s, dchar lbracket = '[', dchar rbracket = ']', dchar comma = ',')
     if (isExactSomeString!Source &&
         isStaticArray!Target && !is(Target == enum))
 {
@@ -3590,8 +3590,8 @@ Lfewerr:
  * '[')), right bracket (default $(D ']')), key-value separator (default $(D
  * ':')), and element seprator (by default $(D ',')).
  */
-Target parse(Target, Source)(ref Source s, dchar lbracket = '[',
-                             dchar rbracket = ']', dchar keyval = ':', dchar comma = ',')
+export Target parse(Target, Source)(ref Source s, dchar lbracket = '[',
+                                    dchar rbracket = ']', dchar keyval = ':', dchar comma = ',')
     if (isExactSomeString!Source &&
         isAssociativeArray!Target && !is(Target == enum))
 {
@@ -3849,21 +3849,21 @@ Target parseElement(Target, Source)(ref Source s)
  * Convenience functions for converting one or more arguments
  * of any type into _text (the three character widths).
  */
-string text(T...)(T args) if (T.length > 0) { return textImpl!string(args); }
+export string text(T...)(T args) if (T.length > 0) { return textImpl!string(args); }
 
 // @@@DEPRECATED_2017-06@@@
 deprecated("Calling `text` with 0 arguments is deprecated")
-string text(T...)(T args) if (T.length == 0) { return textImpl!string(args); }
+export string text(T...)(T args) if (T.length == 0) { return textImpl!string(args); }
 
 ///ditto
-wstring wtext(T...)(T args) if (T.length > 0) { return textImpl!wstring(args); }
+export wstring wtext(T...)(T args) if (T.length > 0) { return textImpl!wstring(args); }
 
 // @@@DEPRECATED_2017-06@@@
 deprecated("Calling `wtext` with 0 arguments is deprecated")
-wstring wtext(T...)(T args) if (T.length == 0) { return textImpl!wstring(args); }
+export wstring wtext(T...)(T args) if (T.length == 0) { return textImpl!wstring(args); }
 
 ///ditto
-dstring dtext(T...)(T args) if (T.length > 0) { return textImpl!dstring(args); }
+export dstring dtext(T...)(T args) if (T.length > 0) { return textImpl!dstring(args); }
 
 ///
 @safe unittest
@@ -3875,7 +3875,7 @@ dstring dtext(T...)(T args) if (T.length > 0) { return textImpl!dstring(args); }
 
 // @@@DEPRECATED_2017-06@@@
 deprecated("Calling `dtext` with 0 arguments is deprecated")
-dstring dtext(T...)(T args) if (T.length == 0) { return textImpl!dstring(args); }
+export dstring dtext(T...)(T args) if (T.length == 0) { return textImpl!dstring(args); }
 
 private S textImpl(S, U...)(U args)
 {
@@ -4158,7 +4158,7 @@ Furthermore, emplaceRef optionally takes a type paremeter, which specifies
 the type we want to build. This helps to build qualified objects on mutable
 buffer, without breaking the type system with unsafe casts.
 +/
-package void emplaceRef(T, UT, Args...)(ref UT chunk, auto ref Args args)
+package export void emplaceRef(T, UT, Args...)(ref UT chunk, auto ref Args args)
 {
     static if (args.length == 0)
     {
@@ -5426,7 +5426,7 @@ void toTextRange(T, W)(T value, W writer)
     Note that the result is always mutable even if the original type was const
     or immutable. In order to retain the constness, use $(REF Unsigned, std,traits).
  */
-auto unsigned(T)(T x) if (isIntegral!T)
+export auto unsigned(T)(T x) if (isIntegral!T)
 {
     return cast(Unqual!(Unsigned!T))x;
 }
@@ -5474,7 +5474,7 @@ auto unsigned(T)(T x) if (isIntegral!T)
     }
 }
 
-auto unsigned(T)(T x) if (isSomeChar!T)
+export auto unsigned(T)(T x) if (isSomeChar!T)
 {
     // All characters are unsigned
     static assert(T.min == 0);
@@ -5846,7 +5846,7 @@ private auto hexStrImpl(String)(scope String hexData)
  *      Random access range with slicing and everything
  */
 
-auto toChars(ubyte radix = 10, Char = char, LetterCase letterCase = LetterCase.lower, T)(T value)
+export auto toChars(ubyte radix = 10, Char = char, LetterCase letterCase = LetterCase.lower, T)(T value)
     pure nothrow @nogc @safe
     if ((radix == 2 || radix == 8 || radix == 10 || radix == 16) &&
         (is(Unqual!T == uint) || is(Unqual!T == ulong) ||
