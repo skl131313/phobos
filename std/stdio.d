@@ -4137,7 +4137,7 @@ The content of $(D buffer) is reused across calls. In the
 
  In case of an I/O error, an $(D StdioException) is thrown.
 */
-auto chunks(File f, size_t size)
+export auto chunks(File f, size_t size)
 {
     return ChunksImpl(f, size);
 }
@@ -4328,7 +4328,7 @@ extern(C) void std_stdio_static_this()
 }
 
 //---------
-__gshared
+export __gshared
 {
     /** The standard input stream.
         Bugs:
@@ -4476,7 +4476,7 @@ private struct ReadlnAppender
 
 // Private implementation of readln
 version (DIGITAL_MARS_STDIO)
-private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation /*ignored*/)
+export private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation /*ignored*/)
 {
     FLOCK(fps);
     scope(exit) FUNLOCK(fps);
@@ -4599,7 +4599,7 @@ private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orie
 }
 
 version (MICROSOFT_STDIO)
-private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation /*ignored*/)
+export private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation /*ignored*/)
 {
     FLOCK(fps);
     scope(exit) FUNLOCK(fps);
@@ -4631,7 +4631,7 @@ private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orie
 }
 
 version (HAS_GETDELIM)
-private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation orientation)
+export private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation orientation)
 {
     import core.stdc.stdlib : free;
     import core.stdc.wchar_ : fwide;
@@ -4733,7 +4733,7 @@ private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orie
 }
 
 version (NO_GETDELIM)
-private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation orientation)
+export private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation orientation)
 {
     import core.stdc.wchar_ : fwide;
 
