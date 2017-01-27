@@ -1029,7 +1029,7 @@ Returns:
     A $(D string) that represents the $(D BigInt) as a decimal number.
 
 */
-string toDecimalString(const(BigInt) x)
+export string toDecimalString(const(BigInt) x)
 {
     string outbuff="";
     void sink(const(char)[] s) { outbuff ~= s; }
@@ -1057,7 +1057,7 @@ Returns:
     number in upper case.
 
 */
-string toHex(const(BigInt) x)
+export string toHex(const(BigInt) x)
 {
     string outbuff="";
     void sink(const(char)[] s) { outbuff ~= s; }
