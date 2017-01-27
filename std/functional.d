@@ -58,7 +58,7 @@ Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
          http://www.boost.org/LICENSE_1_0.txt)
 */
-module std.functional;
+export module std.functional;
 
 import std.meta; // AliasSeq, Reverse
 import std.traits; // isCallable, Parameters
@@ -182,7 +182,7 @@ If $(D fun) is not a string, $(D binaryFun) aliases itself away to
 $(D fun).
 */
 
-template binaryFun(alias fun, string parm1Name = "a",
+export template binaryFun(alias fun, string parm1Name = "a",
         string parm2Name = "b")
 {
     static if (is(typeof(fun) : string))
@@ -416,7 +416,7 @@ private uint _ctfeMatchBinary(string fun, string name1, string name2)
 }
 
 //undocumented
-template safeOp(string S)
+export template safeOp(string S)
     if (S=="<"||S==">"||S=="<="||S==">="||S=="=="||S=="!=")
 {
     import std.traits : isIntegral;
