@@ -83,7 +83,7 @@ Macros:
     OBJECTREF=$(D $(LINK2 object.html#$0,$0))
     LREF=$(D $(LINK2 #.$0,$0))
 */
-module std.process;
+export module std.process;
 
 version (Posix)
 {
@@ -279,13 +279,13 @@ $(REF StdioException, std,stdio) on failure to pass one of the streams
     to the child process (Windows only).$(BR)
 $(REF RangeError, core,exception) if $(D args) is empty.
 */
-Pid spawnProcess(in char[][] args,
-                 File stdin = std.stdio.stdin,
-                 File stdout = std.stdio.stdout,
-                 File stderr = std.stdio.stderr,
-                 const string[string] env = null,
-                 Config config = Config.none,
-                 in char[] workDir = null)
+export Pid spawnProcess(in char[][] args,
+                        File stdin = std.stdio.stdin,
+                        File stdout = std.stdio.stdout,
+                        File stderr = std.stdio.stderr,
+                        const string[string] env = null,
+                        Config config = Config.none,
+                        in char[] workDir = null)
     @trusted // TODO: Should be @safe
 {
     version (Windows)    auto  args2 = escapeShellArguments(args);
@@ -294,10 +294,10 @@ Pid spawnProcess(in char[][] args,
 }
 
 /// ditto
-Pid spawnProcess(in char[][] args,
-                 const string[string] env,
-                 Config config = Config.none,
-                 in char[] workDir = null)
+export Pid spawnProcess(in char[][] args,
+                        const string[string] env,
+                        Config config = Config.none,
+                        in char[] workDir = null)
     @trusted // TODO: Should be @safe
 {
     return spawnProcess(args,
@@ -310,13 +310,13 @@ Pid spawnProcess(in char[][] args,
 }
 
 /// ditto
-Pid spawnProcess(in char[] program,
-                 File stdin = std.stdio.stdin,
-                 File stdout = std.stdio.stdout,
-                 File stderr = std.stdio.stderr,
-                 const string[string] env = null,
-                 Config config = Config.none,
-                 in char[] workDir = null)
+export Pid spawnProcess(in char[] program,
+                        File stdin = std.stdio.stdin,
+                        File stdout = std.stdio.stdout,
+                        File stderr = std.stdio.stderr,
+                        const string[string] env = null,
+                        Config config = Config.none,
+                        in char[] workDir = null)
     @trusted
 {
     return spawnProcess((&program)[0 .. 1],
@@ -324,10 +324,10 @@ Pid spawnProcess(in char[] program,
 }
 
 /// ditto
-Pid spawnProcess(in char[] program,
-                 const string[string] env,
-                 Config config = Config.none,
-                 in char[] workDir = null)
+export Pid spawnProcess(in char[] program,
+                        const string[string] env,
+                        Config config = Config.none,
+                        in char[] workDir = null)
     @trusted
 {
     return spawnProcess((&program)[0 .. 1], env, config, workDir);
@@ -1654,7 +1654,7 @@ Throws:
 $(REF StdioException, std,stdio) on failure.
 */
 version (Posix)
-Pipe pipe() @trusted //TODO: @safe
+export Pipe pipe() @trusted //TODO: @safe
 {
     import core.sys.posix.stdio : fdopen;
     int[2] fds;
@@ -1672,7 +1672,7 @@ Pipe pipe() @trusted //TODO: @safe
     return p;
 }
 else version (Windows)
-Pipe pipe() @trusted //TODO: @safe
+export Pipe pipe() @trusted //TODO: @safe
 {
     // use CreatePipe to create an anonymous pipe
     HANDLE readHandle;
@@ -1706,7 +1706,7 @@ Pipe pipe() @trusted //TODO: @safe
 
 
 /// An interface to a pipe created by the $(LREF pipe) function.
-struct Pipe
+export struct Pipe
 {
     /// The read end of the pipe.
     @property File readEnd() @safe nothrow { return _read; }
@@ -2194,7 +2194,7 @@ auto execute(in char[][] args,
              Config config = Config.none,
              size_t maxOutput = size_t.max,
              in char[] workDir = null)
-    @trusted //TODO: @safe
+    @trusted export //TODO: @safe
 {
     return executeImpl!pipeProcess(args, env, config, maxOutput, workDir);
 }
@@ -2205,7 +2205,7 @@ auto execute(in char[] program,
              Config config = Config.none,
              size_t maxOutput = size_t.max,
              in char[] workDir = null)
-    @trusted //TODO: @safe
+    @trusted export //TODO: @safe
 {
     return executeImpl!pipeProcess(program, env, config, maxOutput, workDir);
 }
@@ -2217,7 +2217,7 @@ auto executeShell(in char[] command,
                   size_t maxOutput = size_t.max,
                   in char[] workDir = null,
                   string shellPath = nativeShell)
-    @trusted //TODO: @safe
+    @trusted export //TODO: @safe
 {
     return executeImpl!pipeShell(command,
                                  env,
@@ -2318,7 +2318,7 @@ private auto executeImpl(alias pipeFunc, Cmd, ExtraPipeFuncArgs...)(
 }
 
 /// An exception that signals a problem with starting or waiting for a process.
-class ProcessException : Exception
+export class ProcessException : Exception
 {
     import std.exception : basicExceptionCtors;
     mixin basicExceptionCtors;
@@ -2371,7 +2371,7 @@ On POSIX, $(D userShell) returns the contents of the SHELL environment
 variable, if it exists and is non-empty.  Otherwise, it returns the result of
 $(LREF nativeShell).
 */
-@property string userShell() @safe
+@property string userShell() @safe export
 {
     version (Windows)      return environment.get("COMSPEC", nativeShell);
     else version (Posix)   return environment.get("SHELL", nativeShell);
@@ -2383,7 +2383,7 @@ The platform-specific native shell path.
 This function returns $(D "cmd.exe") on Windows, $(D "/bin/sh") on POSIX, and
 $(D "/system/bin/sh") on Android.
 */
-@property string nativeShell() @safe @nogc pure nothrow
+@property string nativeShell() @safe @nogc pure nothrow export
 {
     version (Windows)      return "cmd.exe";
     else version (Android) return "/system/bin/sh";
@@ -2405,7 +2405,7 @@ version (Windows) private immutable string shellSwitch = "/C";
  * writefln("Current process ID: %d", thisProcessID);
  * ---
  */
-@property int thisProcessID() @trusted nothrow //TODO: @safe
+@property int thisProcessID() @trusted nothrow export //TODO: @safe
 {
     version (Windows)    return GetCurrentProcessId();
     else version (Posix) return core.sys.posix.unistd.getpid();
@@ -2424,7 +2424,7 @@ version (Windows) private immutable string shellSwitch = "/C";
  * writefln("Current thread ID: %s", thisThreadID);
  * ---
  */
-@property ThreadID thisThreadID() @trusted nothrow //TODO: @safe
+@property ThreadID thisThreadID() @trusted nothrow export //TODO: @safe
 {
     version (Windows)
         return GetCurrentThreadId();
@@ -2564,7 +2564,7 @@ Throws:
 $(OBJECTREF Exception) if any part of the command line contains unescapable
 characters (NUL on all platforms, as well as CR and LF on Windows).
 */
-string escapeShellCommand(in char[][] args...) @safe pure
+string escapeShellCommand(in char[][] args...) @safe pure export
 {
     if (args.empty)
         return null;
@@ -2710,7 +2710,7 @@ Quotes a command-line argument in a manner conforming to the behavior of
 $(LINK2 http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391(v=vs.85).aspx,
 CommandLineToArgvW).
 */
-string escapeWindowsArgument(in char[] arg) @trusted pure nothrow
+string escapeWindowsArgument(in char[] arg) @trusted pure nothrow export
 {
     // Rationale for leaving this function as public:
     // this algorithm of escaping paths is also used in other software,
@@ -2896,7 +2896,7 @@ private char[] escapePosixArgumentImpl(alias allocator)(in char[] arg)
 Escapes a filename to be used for shell redirection with $(LREF spawnShell),
 $(LREF pipeShell) or $(LREF executeShell).
 */
-string escapeShellFileName(in char[] fileName) @trusted pure nothrow
+string escapeShellFileName(in char[] fileName) @trusted pure nothrow export
 {
     // The unittest for this function requires special
     // preparation - see below.
@@ -3043,7 +3043,7 @@ interface.
 This class contains only static methods, and cannot be instantiated.
 See below for examples of use.
 */
-abstract final class environment
+export abstract final class environment
 {
 static:
     /**
