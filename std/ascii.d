@@ -19,7 +19,7 @@
     Authors:   $(HTTP digitalmars.com, Walter Bright) and Jonathan M Davis
     Source:    $(PHOBOSSRC std/_ascii.d)
   +/
-module std.ascii;
+export module std.ascii;
 
 version (unittest)
 {
@@ -30,15 +30,15 @@ version (unittest)
 }
 
 
-immutable fullHexDigits  = "0123456789ABCDEFabcdef";     /// 0..9A..Fa..f
-immutable hexDigits      = fullHexDigits[0..16];         /// 0..9A..F
-immutable lowerHexDigits = "0123456789abcdef";           /// 0..9a..f
-immutable digits         = hexDigits[0..10];             /// 0..9
-immutable octalDigits    = digits[0..8];                 /// 0..7
-immutable letters        = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"; /// A..Za..z
-immutable uppercase      = letters[0..26];               /// A..Z
-immutable lowercase      = letters[26..52];              /// a..z
-immutable whitespace     = " \t\v\r\n\f";                /// ASCII _whitespace
+export immutable fullHexDigits  = "0123456789ABCDEFabcdef";     /// 0..9A..Fa..f
+export immutable hexDigits      = fullHexDigits[0..16];         /// 0..9A..F
+export immutable lowerHexDigits = "0123456789abcdef";           /// 0..9a..f
+export immutable digits         = hexDigits[0..10];             /// 0..9
+export immutable octalDigits    = digits[0..8];                 /// 0..7
+export immutable letters        = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"; /// A..Za..z
+export immutable uppercase      = letters[0..26];               /// A..Z
+export immutable lowercase      = letters[26..52];              /// a..z
+export immutable whitespace     = " \t\v\r\n\f";                /// ASCII _whitespace
 
 /++
     Letter case specifier.
@@ -51,9 +51,9 @@ enum LetterCase : bool
 
 /// Newline sequence for this system.
 version(Windows)
-    immutable newline = "\r\n";
+    export immutable newline = "\r\n";
 else version(Posix)
-    immutable newline = "\n";
+    export immutable newline = "\n";
 else
     static assert(0, "Unsupported OS");
 
