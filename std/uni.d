@@ -614,7 +614,7 @@ CHARACTER = $(S_LINK Character, character)
 CHARACTERS = $(S_LINK Character, characters)
 CLUSTER = $(S_LINK Grapheme cluster, grapheme cluster)
 +/
-module std.uni;
+export module std.uni;
 
 import std.meta; // AliasSeq
 import std.range.primitives; // back, ElementEncodingType, ElementType, empty,
@@ -796,7 +796,7 @@ size_t replicateBits(size_t times, size_t bits)(size_t val) @safe pure nothrow @
 }
 
 // multiple arrays squashed into one memory block
-struct MultiArray(Types...)
+export struct MultiArray(Types...)
 {
     import std.range.primitives : isOutputRange;
     this(size_t[] sizes...) @safe pure nothrow
@@ -906,7 +906,7 @@ struct MultiArray(Types...)
 
 private:
     import std.meta : staticMap;
-    @property auto raw_ptr(size_t n)()inout pure nothrow @nogc
+    export @property auto raw_ptr(size_t n)()inout pure nothrow @nogc
     {
         static if (n == 0)
             return storage.ptr;
@@ -1102,7 +1102,7 @@ template PackedPtr(T)
     alias PackedPtr = PackedPtrImpl!(T, bits > 1 ? nextPow2(bits - 1) : 1);
 }
 
-struct PackedPtrImpl(T, size_t bits)
+export struct PackedPtrImpl(T, size_t bits)
 {
 pure nothrow:
     static assert(isPow2OrZero(bits));
@@ -1358,7 +1358,7 @@ private:
 }
 
 
-private struct SliceOverIndexed(T)
+private export struct SliceOverIndexed(T)
 {
     enum assignableIndex = is(typeof((){ T.init[0] = Item.init; }));
     enum assignableSlice = is(typeof((){ T.init[0..0] = Item.init; }));
@@ -1701,7 +1701,7 @@ alias sharSwitchLowerBound = sharMethod!switchUniformLowerBound;
         insertInPlace(arr, arr.length, value);
     }
 
-    static void destroy(T)(ref T arr)
+    static void destroy(T)(ref T arr) export
         if (isDynamicArray!T && is(Unqual!T == T))
     {
         debug
@@ -1711,7 +1711,7 @@ alias sharSwitchLowerBound = sharMethod!switchUniformLowerBound;
         arr = null;
     }
 
-    static void destroy(T)(ref T arr)
+    static void destroy(T)(ref T arr) export
         if (isDynamicArray!T && !is(Unqual!T == T))
     {
         arr = null;
@@ -1896,7 +1896,7 @@ public alias CodepointSet = InversionList!GcPolicy;
     to represent [a, b$(RPAREN) intervals of $(CODEPOINTS). As used in $(LREF InversionList).
     Any interval type should pass $(LREF isIntegralPair) trait.
 */
-public struct CodepointInterval
+public export struct CodepointInterval
 {
 pure:
     uint[2] _tuple;
@@ -1974,7 +1974,7 @@ pure:
     alias $(LREF CodepointSet) throughout the whole code base.
     )
 */
-@trusted public struct InversionList(SP=GcPolicy)
+@trusted public export struct InversionList(SP=GcPolicy)
 {
     import std.range : assumeSorted;
 
@@ -2012,7 +2012,7 @@ public:
     }
 
     //helper function that avoids sanity check to be CTFE-friendly
-    private static fromIntervals(Range)(Range intervals) pure
+    private export static fromIntervals(Range)(Range intervals) pure
     {
         import std.algorithm.iteration : map;
         import std.range : roundRobin;
@@ -2023,7 +2023,7 @@ public:
         return set;
     }
     //ditto untill sort is CTFE-able
-    private static fromIntervals()(uint[] intervals...) pure
+    private export static fromIntervals()(uint[] intervals...) pure
     in
     {
         import std.conv : text;
@@ -2268,7 +2268,7 @@ public:
     */
     @property auto byCodepoint()
     {
-        @trusted static struct CodepointRange
+        @trusted export static struct CodepointRange
         {
             this(This set)
             {
@@ -2676,7 +2676,7 @@ private:
     alias Marker = size_t;
 
     // a random-access range of integral pairs
-    static struct Intervals(Range)
+    export static struct Intervals(Range)
     {
         this(Range sp)
         {
@@ -2762,7 +2762,7 @@ private:
 
     // called after construction from intervals
     // to make sure invariants hold
-    void sanitize()
+    export void sanitize()
     {
         import std.algorithm.comparison : max;
         import std.algorithm.mutation : SwapStrategy;
@@ -2809,7 +2809,7 @@ private:
     }
 
     // special case for normal InversionList
-    ref subChar(dchar ch)
+    export ref subChar(dchar ch)
     {
         auto mark = skipUpTo(ch);
         if (mark != data.length
@@ -2822,7 +2822,7 @@ private:
     }
 
     //
-    Marker addInterval(int a, int b, Marker hint=Marker.init)
+    export Marker addInterval(int a, int b, Marker hint=Marker.init)
     in
     {
         assert(a <= b);
@@ -2936,7 +2936,7 @@ private:
     }
 
     //
-    Marker dropUpTo(uint a, Marker pos=Marker.init)
+    export Marker dropUpTo(uint a, Marker pos=Marker.init)
     in
     {
         assert(pos % 2 == 0); // at start of interval
@@ -2972,7 +2972,7 @@ private:
     }
 
     //
-    Marker skipUpTo(uint a, Marker pos=Marker.init)
+    export Marker skipUpTo(uint a, Marker pos=Marker.init)
     out(result)
     {
         assert(result % 2 == 0);// always start of interval
@@ -3062,7 +3062,7 @@ private:
         *dest = (val<<8) | (*dest & 0xFF);
 }
 
-@system private uint read24(scope const ubyte* ptr, size_t idx) pure nothrow @nogc
+@system private export uint read24(scope const ubyte* ptr, size_t idx) pure nothrow @nogc
 {
     static if (hasUnalignedReads)
         return __ctfe ? safeRead24(ptr, idx) : unalignedRead24(ptr, idx);
@@ -3070,7 +3070,7 @@ private:
         return safeRead24(ptr, idx);
 }
 
-@system private void write24(scope ubyte* ptr, uint val, size_t idx) pure nothrow @nogc
+@system private export void write24(scope ubyte* ptr, uint val, size_t idx) pure nothrow @nogc
 {
     static if (hasUnalignedReads)
         return __ctfe ? safeWrite24(ptr, val, idx) : unalignedWrite24(ptr, val, idx);
@@ -3078,7 +3078,7 @@ private:
         return safeWrite24(ptr, val, idx);
 }
 
-struct CowArray(SP=GcPolicy)
+export struct CowArray(SP=GcPolicy)
 {
     import std.range.primitives : hasLength;
 
@@ -3246,12 +3246,12 @@ struct CowArray(SP=GcPolicy)
 
 private:
     // ref-count is right after the data
-    @property uint refCount() const
+    @property uint refCount() const export
     {
         return data[$-1];
     }
 
-    @property void refCount(uint cnt)
+    @property void refCount(uint cnt) export
     {
         data[$-1] = cnt;
     }
@@ -4464,7 +4464,7 @@ struct clampIdx(size_t idx, size_t bits)
     Use $(LREF utfMatcher) to obtain a concrete matcher
     for UTF-8 or UTF-16 encodings.
 */
-public struct MatcherConcept
+public export struct MatcherConcept
 {
     /**
         $(P Perform a semantic equivalent 2 operations:
@@ -5472,7 +5472,7 @@ struct sliceBits(size_t from, size_t to)
 {
     //for now bypass assumeSize, DMD has trouble inlining it
     enum bitSize = to-from;
-    static auto opCall(T)(T x)
+    export static auto opCall(T)(T x)
     out(result)
     {
         assert(result < (1<<to-from));
@@ -5652,8 +5652,7 @@ template idxTypes(Key, size_t fullBits, Prefix...)
 }
 
 //============================================================================
-
-@safe pure int comparePropertyName(Char1, Char2)(const(Char1)[] a, const(Char2)[] b)
+@safe pure export int comparePropertyName(Char1, Char2)(const(Char1)[] a, const(Char2)[] b)
     if (is(Char1 : dchar) && is(Char2 : dchar))
 {
     import std.algorithm.comparison : cmp;
@@ -5763,7 +5762,7 @@ package ubyte[] compressIntervals(Range)(Range intervals)
     return DecompressedIntervals(data);
 }
 
-@safe struct DecompressedIntervals
+@safe export struct DecompressedIntervals
 {
 pure:
     const(ubyte)[] _stream;
@@ -6003,7 +6002,7 @@ template SetSearcher(alias table, string kind)
     'White_Space', 'white-SpAce' and 'whitespace' are all considered equal
     and yield the same set of white space $(CHARACTERS).
 */
-@safe public struct unicode
+@safe public export struct unicode
 {
     /**
         Performs the lookup of set of $(CODEPOINTS)
@@ -6188,7 +6187,7 @@ enum controlSwitch = `
 // TODO: redo the most of hangul stuff algorithmically in case of Graphemes too
 // kill unrolled switches
 
-private static bool isRegionalIndicator(dchar ch) @safe
+private export static bool isRegionalIndicator(dchar ch) @safe
 {
     return ch >= '\U0001F1E6' && ch <= '\U0001F1FF';
 }
@@ -6599,7 +6598,7 @@ Range byCodePoint(Range)(Range range)
 
     See_Also: $(LREF decodeGrapheme), $(LREF graphemeStride)
 +/
-@trusted struct Grapheme
+@trusted export struct Grapheme
 {
     import std.exception : enforce;
     import std.traits : isDynamicArray;
@@ -6814,7 +6813,7 @@ private:
         }
     }
 
-    void convertToBig()
+    export void convertToBig()
     {
         import core.stdc.stdlib : malloc;
 
@@ -6834,11 +6833,11 @@ private:
 
     void setBig() pure nothrow @nogc { slen_ |= small_flag; }
 
-    @property size_t smallLength() const pure nothrow @nogc
+    @property export size_t smallLength() const pure nothrow @nogc
     {
         return slen_ & small_mask;
     }
-    @property ubyte isBig() const pure nothrow @nogc
+    @property export ubyte isBig() const pure nothrow @nogc
     {
         return slen_ & small_flag;
     }
@@ -7028,7 +7027,7 @@ int sicmp(S1, S2)(S1 r1, S2 r2)
 }
 
 // overloads for the most common cases to reduce compile time
-@safe @nogc pure nothrow
+@safe @nogc pure nothrow export
 {
     int sicmp(const(char)[] str1, const(char)[] str2)
     { return sicmp!(const(char)[], const(char)[])(str1, str2); }
@@ -7038,7 +7037,7 @@ int sicmp(S1, S2)(S1 r1, S2 r2)
     { return sicmp!(const(dchar)[], const(dchar)[])(str1, str2); }
 }
 
-private int fullCasedCmp(Range)(dchar lhs, dchar rhs, ref Range rtail)
+private export int fullCasedCmp(Range)(dchar lhs, dchar rhs, ref Range rtail)
     @trusted pure nothrow
 {
     import std.algorithm.searching : skipOver;
@@ -7163,7 +7162,7 @@ int icmp(S1, S2)(S1 r1, S2 r2)
 }
 
 // overloads for the most common cases to reduce compile time
-@safe @nogc pure nothrow
+@safe @nogc pure nothrow export
 {
     int icmp(const(char)[] str1, const(char)[] str2)
     { return icmp!(const(char)[], const(char)[])(str1, str2); }
@@ -7219,13 +7218,13 @@ int icmp(S1, S2)(S1 r1, S2 r2)
     Return a range of all $(CODEPOINTS) that casefold to
     and from this $(D ch).
 */
-package auto simpleCaseFoldings(dchar ch) @safe
+package export auto simpleCaseFoldings(dchar ch) @safe
 {
     import std.internal.unicode_tables : simpleCaseTable; // generated file
     alias sTable = simpleCaseTable;
     static struct Range
     {
-    @safe pure nothrow:
+    @safe pure nothrow export:
         uint idx; //if == uint.max, then read c.
         union
         {
@@ -7316,7 +7315,7 @@ package auto simpleCaseFoldings(dchar ch) @safe
 /++
     $(P Returns the $(S_LINK Combining class, combining class) of $(D ch).)
 +/
-ubyte combiningClass(dchar ch) @safe pure nothrow @nogc
+export ubyte combiningClass(dchar ch) @safe pure nothrow @nogc
 {
     return combiningClassTrie[ch];
 }
@@ -7376,7 +7375,7 @@ enum {
     Note: Hangul syllables are not covered by this function.
     See $(D composeJamo) below.
 +/
-public dchar compose(dchar first, dchar second) pure nothrow @safe
+public export dchar compose(dchar first, dchar second) pure nothrow @safe
 {
     import std.algorithm.iteration : map;
     import std.internal.unicode_comp : compositionTable, composeCntShift, composeIdxMask;
@@ -7501,7 +7500,7 @@ int hangulSyllableIndex(dchar ch) pure nothrow @nogc @safe
 }
 
 // internal helper: compose hangul syllables leaving dchar.init in holes
-void hangulRecompose(dchar[] seq) pure nothrow @nogc @safe
+export void hangulRecompose(dchar[] seq) pure nothrow @nogc @safe
 {
     for (size_t idx = 0; idx + 1 < seq.length; )
     {
@@ -7536,7 +7535,7 @@ public:
     Decomposes a Hangul syllable. If $(D ch) is not a composed syllable
     then this function returns $(LREF Grapheme) containing only $(D ch) as is.
 */
-Grapheme decomposeHangul(dchar ch) @safe
+export Grapheme decomposeHangul(dchar ch) @safe
 {
     immutable idxS = cast(int)ch - jamoSBase;
     if (idxS < 0 || idxS >= jamoSCount) return Grapheme(ch);
@@ -7568,7 +7567,7 @@ Grapheme decomposeHangul(dchar ch) @safe
     If any of $(D lead) and $(D vowel) are not a valid hangul jamo
     of the respective $(CHARACTER) class returns dchar.init.
 +/
-dchar composeJamo(dchar lead, dchar vowel, dchar trailing=dchar.init) pure nothrow @nogc @safe
+export dchar composeJamo(dchar lead, dchar vowel, dchar trailing=dchar.init) pure nothrow @nogc @safe
 {
     if (!isJamoL(lead))
         return dchar.init;
@@ -7782,7 +7781,7 @@ inout(C)[] normalize(NormalizationForm norm=NFC, C)(inout(C)[] input)
 }
 
 // canonically recompose given slice of code points, works in-place and mutates data
-private size_t recompose(size_t start, dchar[] input, ubyte[] ccc) pure nothrow @safe
+private export size_t recompose(size_t start, dchar[] input, ubyte[] ccc) pure nothrow @safe
 {
     assert(input.length == ccc.length);
     int accumCC = -1;// so that it's out of 0..255 range
@@ -7950,7 +7949,7 @@ version(std_uni_bootstrap)
 {
     // old version used for bootstrapping of gen_uni.d that generates
     // up to date optimal versions of all of isXXX functions
-    @safe pure nothrow @nogc public bool isWhite(dchar c)
+    @safe pure nothrow @nogc public export bool isWhite(dchar c)
     {
         import std.ascii : isWhite;
         return isWhite(c) ||
@@ -7964,7 +7963,7 @@ else
 {
 
 // trusted -> avoid bounds check
-@trusted pure nothrow @nogc private
+@trusted pure nothrow @nogc private export
 {
     import std.internal.unicode_tables; // : toLowerTable, toTitleTable, toUpperTable; // generated file
 
@@ -7990,7 +7989,7 @@ public:
     carriage return, and linefeed characters), Zs, Zl, Zp, and NEL(U+0085))
 +/
 @safe pure nothrow @nogc
-public bool isWhite(dchar c)
+export bool isWhite(dchar c)
 {
     import std.internal.unicode_tables : isWhiteGen; // generated file
     return isWhiteGen(c); // call pregenerated binary search
@@ -8000,7 +7999,7 @@ public bool isWhite(dchar c)
     Return whether $(D c) is a Unicode lowercase $(CHARACTER).
 +/
 @safe pure nothrow @nogc
-bool isLower(dchar c)
+export bool isLower(dchar c)
 {
     import std.ascii : isLower, isASCII;
     if (isASCII(c))
@@ -8033,7 +8032,7 @@ bool isLower(dchar c)
     Return whether $(D c) is a Unicode uppercase $(CHARACTER).
 +/
 @safe pure nothrow @nogc
-bool isUpper(dchar c)
+export bool isUpper(dchar c)
 {
     import std.ascii : isUpper, isASCII;
     if (isASCII(c))
@@ -8811,7 +8810,7 @@ void toLowerInPlace(C)(ref C[] s) @trusted pure
     toCaseInPlace!(LowerTriple)(s);
 }
 // overloads for the most common cases to reduce compile time
-@safe pure /*TODO nothrow*/
+@safe pure /*TODO nothrow*/ export
 {
     void toLowerInPlace(ref char[] s)
     { toLowerInPlace!char(s); }
@@ -8833,7 +8832,7 @@ void toUpperInPlace(C)(ref C[] s) @trusted pure
     toCaseInPlace!(UpperTriple)(s);
 }
 // overloads for the most common cases to reduce compile time/code size
-@safe pure /*TODO nothrow*/
+@safe pure /*TODO nothrow*/ export
 {
     void toUpperInPlace(ref char[] s)
     { toUpperInPlace!char(s); }
@@ -8851,7 +8850,7 @@ void toUpperInPlace(C)(ref C[] s) @trusted pure
     upper-lower mapping. Use overload of toLower which takes full string instead.
 +/
 @safe pure nothrow @nogc
-dchar toLower(dchar c)
+export dchar toLower(dchar c)
 {
      // optimize ASCII case
     if (c < 0xAA)
@@ -8882,7 +8881,7 @@ S toLower(S)(S s) @trusted pure
     return toCase!(LowerTriple, std.ascii.toLower)(s);
 }
 // overloads for the most common cases to reduce compile time
-@safe pure /*TODO nothrow*/
+@safe pure /*TODO nothrow*/ export
 {
     string toLower(string s)
     { return toLower!string(s); }
@@ -9004,7 +9003,7 @@ S toLower(S)(S s) @trusted pure
     to send it to an $(REF appender, std,array).
 +/
 @safe pure nothrow @nogc
-dchar toUpper(dchar c)
+export dchar toUpper(dchar c)
 {
     // optimize ASCII case
     if (c < 0xAA)
@@ -9064,7 +9063,7 @@ S toUpper(S)(S s) @trusted pure
     return toCase!(UpperTriple, std.ascii.toUpper)(s);
 }
 // overloads for the most common cases to reduce compile time
-@safe pure /*TODO nothrow*/
+@safe pure /*TODO nothrow*/ export
 {
     string toUpper(string s)
     { return toUpper!string(s); }
@@ -9182,7 +9181,7 @@ S toUpper(S)(S s) @trusted pure
     (general Unicode category: Alphabetic).
 +/
 @safe pure nothrow @nogc
-bool isAlpha(dchar c)
+export bool isAlpha(dchar c)
 {
     // optimization
     if (c < 0xAA)
@@ -9217,7 +9216,7 @@ bool isAlpha(dchar c)
     (general Unicode category: Mn, Me, Mc).
 +/
 @safe pure nothrow @nogc
-bool isMark(dchar c)
+export bool isMark(dchar c)
 {
     return markTrie[c];
 }
@@ -9236,7 +9235,7 @@ bool isMark(dchar c)
     (general Unicode category: Nd, Nl, No).
 +/
 @safe pure nothrow @nogc
-bool isNumber(dchar c)
+export bool isNumber(dchar c)
 {
     // optimization for ascii case
     if (c <= 0x7F)
@@ -9269,7 +9268,7 @@ bool isNumber(dchar c)
         categories
 +/
 @safe pure nothrow @nogc
-bool isAlphaNum(dchar c)
+export bool isAlphaNum(dchar c)
 {
     static import std.ascii;
 
@@ -9306,7 +9305,7 @@ bool isAlphaNum(dchar c)
     (general Unicode category: Pd, Ps, Pe, Pc, Po, Pi, Pf).
 +/
 @safe pure nothrow @nogc
-bool isPunctuation(dchar c)
+export bool isPunctuation(dchar c)
 {
     static import std.ascii;
 
@@ -9339,7 +9338,7 @@ bool isPunctuation(dchar c)
     (general Unicode category: Sm, Sc, Sk, So).
 +/
 @safe pure nothrow @nogc
-bool isSymbol(dchar c)
+export bool isSymbol(dchar c)
 {
    return symbolTrie[c];
 }
@@ -9362,7 +9361,7 @@ bool isSymbol(dchar c)
     For commonly used less strict semantics see $(LREF isWhite).
 +/
 @safe pure nothrow @nogc
-bool isSpace(dchar c)
+export bool isSpace(dchar c)
 {
     import std.internal.unicode_tables : isSpaceGen; // generated file
     return isSpaceGen(c);
@@ -9385,7 +9384,7 @@ bool isSpace(dchar c)
 
 +/
 @safe pure nothrow @nogc
-bool isGraphical(dchar c)
+export bool isGraphical(dchar c)
 {
     return graphicalTrie[c];
 }
@@ -9406,7 +9405,7 @@ bool isGraphical(dchar c)
     Returns whether $(D c) is a Unicode control $(CHARACTER)
     (general Unicode category: Cc).
 +/
-@safe pure nothrow @nogc
+@safe pure nothrow @nogc export
 bool isControl(dchar c)
 {
     import std.internal.unicode_tables : isControlGen; // generated file
@@ -9430,7 +9429,7 @@ bool isControl(dchar c)
     Returns whether $(D c) is a Unicode formatting $(CHARACTER)
     (general Unicode category: Cf).
 +/
-@safe pure nothrow @nogc
+@safe pure nothrow @nogc export
 bool isFormat(dchar c)
 {
     import std.internal.unicode_tables : isFormatGen; // generated file
@@ -9452,7 +9451,7 @@ bool isFormat(dchar c)
     Returns whether $(D c) is a Unicode Private Use $(CODEPOINT)
     (general Unicode category: Co).
 +/
-@safe pure nothrow @nogc
+@safe pure nothrow @nogc export
 bool isPrivateUse(dchar c)
 {
     return (0x00_E000 <= c && c <= 0x00_F8FF)
@@ -9464,7 +9463,7 @@ bool isPrivateUse(dchar c)
     Returns whether $(D c) is a Unicode surrogate $(CODEPOINT)
     (general Unicode category: Cs).
 +/
-@safe pure nothrow @nogc
+@safe pure nothrow @nogc export
 bool isSurrogate(dchar c)
 {
     return (0xD800 <= c && c <= 0xDFFF);
@@ -9473,7 +9472,7 @@ bool isSurrogate(dchar c)
 /++
     Returns whether $(D c) is a Unicode high surrogate (lead surrogate).
 +/
-@safe pure nothrow @nogc
+@safe pure nothrow @nogc export
 bool isSurrogateHi(dchar c)
 {
     return (0xD800 <= c && c <= 0xDBFF);
@@ -9482,7 +9481,7 @@ bool isSurrogateHi(dchar c)
 /++
     Returns whether $(D c) is a Unicode low surrogate (trail surrogate).
 +/
-@safe pure nothrow @nogc
+@safe pure nothrow @nogc export
 bool isSurrogateLo(dchar c)
 {
     return (0xDC00 <= c && c <= 0xDFFF);
@@ -9493,7 +9492,7 @@ bool isSurrogateLo(dchar c)
     a $(CODEPOINT) with no assigned abstract character.
     (general Unicode category: Cn)
 +/
-@safe pure nothrow @nogc
+@safe pure nothrow @nogc export
 bool isNonCharacter(dchar c)
 {
     return nonCharacterTrie[c];
@@ -9509,8 +9508,7 @@ bool isNonCharacter(dchar c)
 private:
 // load static data from pre-generated tables into usable datastructures
 
-
-@safe auto asSet(const (ubyte)[] compressed) pure
+export @safe auto asSet(const (ubyte)[] compressed) pure
 {
     return CodepointSet.fromIntervals(decompressIntervals(compressed));
 }
@@ -9520,7 +9518,7 @@ private:
     return const(CodepointTrie!T)(e.offsets, e.sizes, e.data);
 }
 
-@safe pure nothrow @nogc @property
+@safe pure nothrow @nogc @property export
 {
     import std.internal.unicode_tables; // generated file
 
