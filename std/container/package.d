@@ -511,7 +511,7 @@ boost.org/LICENSE_1_0.txt)).
 Authors: Steven Schveighoffer, $(HTTP erdani.com, Andrei Alexandrescu)
  */
 
-module std.container;
+export module std.container;
 
 public import std.container.array;
 public import std.container.binaryheap;
