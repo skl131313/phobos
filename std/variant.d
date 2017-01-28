@@ -63,7 +63,7 @@ License:   $(HTTP www.boost.org/LICENSE_1_0.txt, Boost License 1.0).
 Authors:   $(HTTP erdani.org, Andrei Alexandrescu)
 Source:    $(PHOBOSSRC std/_variant.d)
 */
-module std.variant;
+export module std.variant;
 
 import std.meta, std.traits, std.typecons;
 
@@ -114,7 +114,7 @@ private alias This2Variant(V, T...) = AliasSeq!(ReplaceType!(This, V, T));
  * than this will be boxed).
  *
  */
-struct VariantN(size_t maxDataSize, AllowedTypesParam...)
+export struct VariantN(size_t maxDataSize, AllowedTypesParam...)
 {
     /**
     The list of allowed types. If empty, any type is allowed.
@@ -1465,7 +1465,7 @@ unittest
  */
 
 // @@@ BUG IN COMPILER. THE 'STATIC' BELOW SHOULD NOT COMPILE
-static class VariantException : Exception
+static export class VariantException : Exception
 {
     /// The source type in the conversion or comparison
     TypeInfo source;
