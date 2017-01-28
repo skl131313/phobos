@@ -38,7 +38,7 @@ Author:  David Simcha
 Copyright:  Copyright (c) 2009-2011, David Simcha.
 License:    $(HTTP boost.org/LICENSE_1_0.txt, Boost License 1.0)
 */
-module std.parallelism;
+export module std.parallelism;
 
 ///
 unittest
@@ -369,7 +369,7 @@ unittest
 
 // This is the base "class" for all of the other tasks.  Using C-style
 // polymorphism to allow more direct control over memory allocation, etc.
-private struct AbstractTask
+private export struct AbstractTask
 {
     AbstractTask* prev;
     AbstractTask* next;
@@ -1008,7 +1008,7 @@ Occasionally it is useful to explicitly instantiate a $(D TaskPool):
     primitive (for example a mutex), and you want to parallelize the code that
     needs to run before these threads can be resumed.
  */
-final class TaskPool
+export final class TaskPool
 {
 private:
 
@@ -1047,7 +1047,7 @@ private:
         stopNow
     }
 
-    void doJob(AbstractTask* job)
+    export void doJob(AbstractTask* job)
     {
         assert(job.taskStatus == TaskStatus.inProgress);
         assert(job.next is null);
@@ -1139,7 +1139,7 @@ private:
         return ret;
     }
 
-    AbstractTask* popNoSync()
+    export AbstractTask* popNoSync()
     out(returned)
     {
         /* If task.prev and task.next aren't null, then another thread
@@ -1223,7 +1223,7 @@ private:
         notify();
     }
 
-    void abstractPutGroupNoSync(AbstractTask* h, AbstractTask* t)
+    export void abstractPutGroupNoSync(AbstractTask* h, AbstractTask* t)
     {
         if (status != PoolState.running)
         {
@@ -1248,7 +1248,7 @@ private:
         notifyAll();
     }
 
-    void tryDeleteExecute(AbstractTask* toExecute)
+    export void tryDeleteExecute(AbstractTask* toExecute)
     {
         if (isSingleTask) return;
 
@@ -1316,24 +1316,24 @@ private:
         return true;
     }
 
-    void queueLock()
+    export void queueLock()
     {
         assert(queueMutex);
         if (!isSingleTask) queueMutex.lock();
     }
 
-    void queueUnlock()
+    export void queueUnlock()
     {
         assert(queueMutex);
         if (!isSingleTask) queueMutex.unlock();
     }
 
-    void waiterLock()
+    export void waiterLock()
     {
         if (!isSingleTask) waiterMutex.lock();
     }
 
-    void waiterUnlock()
+    export void waiterUnlock()
     {
         if (!isSingleTask) waiterMutex.unlock();
     }
@@ -1353,7 +1353,7 @@ private:
         if (!isSingleTask) workerCondition.notifyAll();
     }
 
-    void waitUntilCompletion()
+    export void waitUntilCompletion()
     {
         if (isSingleTask)
         {
@@ -1373,7 +1373,7 @@ private:
     // Private constructor for creating dummy pools that only have one thread,
     // only execute one Task, and then terminate.  This is used for
     // Task.executeInNewThread().
-    this(AbstractTask* task, int priority = int.max)
+    export this(AbstractTask* task, int priority = int.max)
     {
         assert(task);
 
@@ -3255,7 +3255,7 @@ threads.  The worker threads in this pool are daemon threads, meaning that it
 is not necessary to call $(D TaskPool.stop) or $(D TaskPool.finish) before
 terminating the main thread.
 */
-@property TaskPool taskPool() @trusted
+@property TaskPool taskPool() @trusted export
 {
     import std.concurrency : initOnce;
     __gshared TaskPool pool;
@@ -3335,7 +3335,7 @@ private template randLen(R)
     enum randLen = isRandomAccessRange!R && hasLength!R;
 }
 
-private void submitAndExecute(
+private export void submitAndExecute(
     TaskPool pool,
     scope void delegate() doIt
 )
@@ -3445,7 +3445,7 @@ private void submitAndExecute(
     if (firstException) throw firstException;
 }
 
-void foreachErr()
+export void foreachErr()
 {
     throw new ParallelForeachError();
 }
@@ -3744,7 +3744,7 @@ private Throwable findLastException(Throwable e) pure nothrow
 }
 
 // Adds e to the exception chain.
-private void addToChain(
+private export void addToChain(
     Throwable e,
     ref Throwable firstException,
     ref Throwable lastException
