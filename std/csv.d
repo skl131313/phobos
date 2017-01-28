@@ -89,7 +89,7 @@
  *   Authors:   Jesse Phillips
  *   Source:    $(PHOBOSSRC std/_csv.d)
  */
-module std.csv;
+export module std.csv;
 
 import std.conv;
 import std.range.primitives;
@@ -107,7 +107,7 @@ import std.exception;  // basicExceptionCtors
  * When performing type conversions, $(REF ConvException, std,conv) is stored in
  * the $(D next) field.
  */
-class CSVException : Exception
+export class CSVException : Exception
 {
     ///
     size_t row, col;
@@ -165,7 +165,7 @@ class CSVException : Exception
  * found in an unquoted field, data continues after a closing quote, or the
  * quoted field was not closed before data was empty.
  */
-class IncompleteCellException : CSVException
+export class IncompleteCellException : CSVException
 {
     /// Data pulled from input before finding a problem
     ///
@@ -204,7 +204,7 @@ class IncompleteCellException : CSVException
  * row is always one and col is the first instance found in header that
  * occurred before the previous starting at one.
  */
-class HeaderMismatchException : CSVException
+export class HeaderMismatchException : CSVException
 {
     mixin basicExceptionCtors;
 }
