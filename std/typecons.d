@@ -38,7 +38,7 @@ Authors:   $(HTTP erdani.org, Andrei Alexandrescu),
            Shin Fujishiro,
            Kenji Hara
  */
-module std.typecons;
+export module std.typecons;
 
 import core.stdc.stdint : uintptr_t;
 import std.meta; // : AliasSeq, allSatisfy;
@@ -459,7 +459,7 @@ template Tuple(Specs...)
         enum isBuildableFrom(T) = isBuildable!(T, U);
     }
 
-    struct Tuple
+    export struct Tuple
     {
         /**
          * The types of the `Tuple`'s components.
@@ -1851,7 +1851,7 @@ template Rebindable(T)
         }
         else
         {
-            struct Rebindable
+            export struct Rebindable
             {
                 mixin RebindableCommon!(T, U, Rebindable);
             }
@@ -3516,7 +3516,7 @@ alias WhiteHole(Base) = AutoImplement!(Base, generateAssertTrap, isAbstractFunct
 }
 
 // / ditto
-class NotImplementedError : Error
+export class NotImplementedError : Error
 {
     this(string method)
     {
@@ -4528,7 +4528,7 @@ if (Targets.length >= 1 && !allSatisfy!(isMutable, Targets))
 }
 
 // Internal class to support dynamic cross-casting
-private interface Structural
+private export interface Structural
 {
     inout(Object) _wrap_getSource() inout @safe pure nothrow;
 }
@@ -5078,7 +5078,7 @@ $(D refCountedStore.isInitialized) or $(D refCountedStore.ensureInitialized)
 before attempting to access the payload. Not doing so results in null
 pointer dereference.
  */
-struct RefCounted(T, RefCountedAutoInitialize autoInit =
+export struct RefCounted(T, RefCountedAutoInitialize autoInit =
         RefCountedAutoInitialize.yes)
 if (!is(T == class) && !(is(T == interface)))
 {
@@ -7596,12 +7596,12 @@ See_Also:
     $(HTTP en.wikipedia.org/wiki/Three-valued_logic,
         Three Valued Logic on Wikipedia)
 */
-struct Ternary
+export struct Ternary
 {
     @safe @nogc nothrow pure:
 
     private ubyte value = 6;
-    private static Ternary make(ubyte b)
+    private export static Ternary make(ubyte b)
     {
         Ternary r = void;
         r.value = b;
