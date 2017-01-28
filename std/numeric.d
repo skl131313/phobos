@@ -18,7 +18,7 @@ Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
          http://www.boost.org/LICENSE_1_0.txt)
 */
-module std.numeric;
+export module std.numeric;
 
 import std.complex;
 import std.math;
@@ -2658,7 +2658,7 @@ private alias lookup_t = float;
  * References:
  * $(HTTP en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm)
  */
-final class Fft
+export final class Fft
 {
     import std.algorithm.iteration : map;
     import core.bitop : bsf;
