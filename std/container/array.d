@@ -14,7 +14,7 @@ boost.org/LICENSE_1_0.txt)).
 
 Authors: $(HTTP erdani.com, Andrei Alexandrescu)
 */
-module std.container.array;
+export module std.container.array;
 
 import std.range.primitives;
 import std.traits;
