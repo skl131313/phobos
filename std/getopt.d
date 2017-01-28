@@ -26,7 +26,7 @@ Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
          http://www.boost.org/LICENSE_1_0.txt)
 */
-module std.getopt;
+export module std.getopt;
 
 import std.traits;
 import std.exception;  // basicExceptionCtors
@@ -40,7 +40,7 @@ $(UL
        $(D std.getopt.config.required) was present.)
 )
 */
-class GetOptException : Exception
+export class GetOptException : Exception
 {
     mixin basicExceptionCtors;
 }
@@ -498,14 +498,14 @@ struct GetoptResult {
 
 /** Information about an option.
 */
-struct Option {
+export struct Option {
     string optShort; /// The short symbol for this option
     string optLong; /// The long symbol for this option
     string help; /// The description of this option
     bool required; /// If a option is required, not passing it will result in an error
 }
 
-private pure Option splitAndGet(string opt) @trusted nothrow
+private export pure Option splitAndGet(string opt) @trusted nothrow
 {
     import std.array : split;
     auto sp = split(opt, "|");
@@ -1013,7 +1013,18 @@ private bool handleOption(R)(string option, R receiver, ref string[] args,
 
    Defaults to '-' but it can be assigned to prior to calling $(D getopt).
  */
-dchar optionChar = '-';
+export dchar optionChar() @safe @nogc nothrow
+{
+    return optionChar;
+}
+
+/// Ditto
+export void optionChar(dchar value) @safe @nogc nothrow
+{
+    optionCharData = value;
+}
+
+private dchar optionCharData = '-';
 
 /**
    The string that conventionally marks the end of all options (default '--').
@@ -1021,14 +1032,36 @@ dchar optionChar = '-';
    Defaults to "--" but can be assigned to prior to calling $(D getopt). Assigning an
    empty string to $(D endOfOptions) effectively disables it.
  */
-string endOfOptions = "--";
+export string endOfOptions() @safe @nogc nothrow
+{
+    return endOfOptionsData;
+}
+
+/// Ditto
+export void endOfOptions(string value) @safe @nogc nothrow
+{
+    endOfOptionsData = value;
+}
+
+private string endOfOptionsData = "--";
 
 /**
    The assignment character used in options with parameters (default '=').
 
    Defaults to '=' but can be assigned to prior to calling $(D getopt).
  */
-dchar assignChar = '=';
+export dchar assignChar() @safe @nogc nothrow
+{
+    return assignCharData;
+}
+
+/// Ditto
+export void assignChar(dchar value) @safe @nogc nothrow
+{
+    assignCharData = value;
+}
+
+private dchar assignCharData = '=';
 
 /**
    The string used to separate the elements of an array or associative array
@@ -1036,11 +1069,22 @@ dchar assignChar = '=';
 
    Defaults to "" but can be assigned to prior to calling $(D getopt).
  */
-string arraySep = "";
+export string arraySep() @safe @nogc nothrow
+{
+    return arraySepData;
+}
+
+/// Ditto
+export void arraySep(string value) @safe @nogc nothrow
+{
+    arraySepData = value;
+}
+
+private string arraySepData = "";
 
 private enum autoIncrementChar = '+';
 
-private struct configuration
+private export struct configuration
 {
     import std.bitmanip : bitfields;
     mixin(bitfields!(
@@ -1053,7 +1097,7 @@ private struct configuration
                 ubyte, "", 2));
 }
 
-private bool optMatch(string arg, string optPattern, ref string value,
+private export bool optMatch(string arg, string optPattern, ref string value,
     configuration cfg)
 {
     import std.uni : toUpper;
@@ -1114,7 +1158,7 @@ private bool optMatch(string arg, string optPattern, ref string value,
     return false;
 }
 
-private void setConfig(ref configuration cfg, config option)
+private export void setConfig(ref configuration cfg, config option)
 {
     switch (option)
     {
@@ -1565,7 +1609,7 @@ Params:
     text = The text to printed at the beginning of the help output.
     opt = The $(D Option) extracted from the $(D getopt) parameter.
 */
-void defaultGetoptPrinter(string text, Option[] opt)
+export void defaultGetoptPrinter(string text, Option[] opt)
 {
     import std.stdio : stdout;
 
