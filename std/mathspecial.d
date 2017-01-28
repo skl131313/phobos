@@ -85,7 +85,7 @@ nothrow:
  *    $(SV -$(INFIN),      $(NAN)      )
  *  )
  */
-real gamma(real x)
+export real gamma(real x)
 {
     return std.internal.math.gammafunction.gamma(x);
 }
@@ -104,7 +104,7 @@ real gamma(real x)
  *    $(SV $(PLUSMNINF),    +$(INFIN)    )
  *  )
  */
-real logGamma(real x)
+export real logGamma(real x)
 {
     return std.internal.math.gammafunction.logGamma(x);
 }
@@ -117,7 +117,7 @@ real logGamma(real x)
  * Note that this function can be used in conjunction with logGamma(x) to
  * evaluate gamma for very large values of x.
  */
-real sgnGamma(real x)
+export real sgnGamma(real x)
 {
     /* Author: Don Clugston. */
     if (isNaN(x)) return x;
@@ -151,7 +151,7 @@ unittest
  *
  * beta(x, y) = ($(GAMMA)(x) * $(GAMMA)(y)) / $(GAMMA)(x + y)
  */
-real beta(real x, real y)
+export real beta(real x, real y)
 {
     if ((x+y)> MAXGAMMA)
     {
@@ -173,7 +173,7 @@ unittest
  *
  *  See_Also: $(LREF logmdigamma), $(LREF logmdigammaInverse).
  */
-real digamma(real x)
+export real digamma(real x)
 {
     return std.internal.math.gammafunction.digamma(x);
 }
@@ -184,7 +184,7 @@ real digamma(real x)
  *
  *  See_Also: $(LREF digamma), $(LREF logmdigammaInverse).
  */
-real logmdigamma(real x)
+export real logmdigamma(real x)
 {
     return std.internal.math.gammafunction.logmdigamma(x);
 }
@@ -195,7 +195,7 @@ real logmdigamma(real x)
  *
  *  See_Also: $(LREF logmdigamma), $(LREF digamma).
  */
-real logmdigammaInverse(real x)
+export real logmdigammaInverse(real x)
 {
     return std.internal.math.gammafunction.logmdigammaInverse(x);
 }
@@ -220,7 +220,7 @@ real logmdigammaInverse(real x)
  * The integral is evaluated by a continued fraction expansion
  * or, when b * x is small, by a power series.
  */
-real betaIncomplete(real a, real b, real x )
+export real betaIncomplete(real a, real b, real x )
 {
     return std.internal.math.gammafunction.betaIncomplete(a, b, x);
 }
@@ -233,7 +233,7 @@ real betaIncomplete(real a, real b, real x )
  *
  *  Newton iterations or interval halving is used.
  */
-real betaIncompleteInverse(real a, real b, real y )
+export real betaIncompleteInverse(real a, real b, real y )
 {
     return std.internal.math.gammafunction.betaIncompleteInv(a, b, y);
 }
@@ -252,7 +252,7 @@ real betaIncompleteInverse(real a, real b, real y )
  * continued fraction expansion, depending on the relative
  * values of a and x.
  */
-real gammaIncomplete(real a, real x )
+export real gammaIncomplete(real a, real x )
 in {
    assert(x >= 0);
    assert(a > 0);
@@ -262,7 +262,7 @@ body {
 }
 
 /** ditto */
-real gammaIncompleteCompl(real a, real x )
+export real gammaIncompleteCompl(real a, real x )
 in {
    assert(x >= 0);
    assert(a > 0);
@@ -277,7 +277,7 @@ body {
  *
  *  gammaIncompleteCompl( a, x ) = p.
  */
-real gammaIncompleteComplInverse(real a, real p)
+export real gammaIncompleteComplInverse(real a, real p)
 in {
   assert(p >= 0 && p <= 1);
   assert(a > 0);
@@ -301,7 +301,7 @@ body {
  * The magnitude of x is limited to about 106.56 for IEEE 80-bit
  * arithmetic; 1 or -1 is returned outside this range.
  */
-real erf(real x)
+export real erf(real x)
 {
     return std.internal.math.errorfunction.erf(x);
 }
@@ -315,7 +315,7 @@ real erf(real x)
  * This function has high relative accuracy for
  * values of x far from zero. (For values near zero, use erf(x)).
  */
-real erfc(real x)
+export real erfc(real x)
 {
     return std.internal.math.errorfunction.erfc(x);
 }
@@ -338,7 +338,7 @@ real erfc(real x)
  * G. Marsaglia, "Evaluating the Normal Distribution",
  * Journal of Statistical Software <b>11</b>, (July 2004).
  */
-real normalDistribution(real x)
+export real normalDistribution(real x)
 {
     return std.internal.math.errorfunction.normalDistributionImpl(x);
 }
@@ -349,7 +349,7 @@ real normalDistribution(real x)
  * Normal probability density function (integrated from
  * minus infinity to x) is equal to p.
  */
-real normalDistributionInverse(real p)
+export real normalDistributionInverse(real p)
 in {
   assert(p>=0.0L && p<=1.0L, "Domain error");
 }
