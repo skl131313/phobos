@@ -13,7 +13,7 @@
     License:    $(HTTP boost.org/LICENSE_1_0.txt, Boost License 1.0)
     Source:     $(PHOBOSSRC std/_complex.d)
 */
-module std.complex;
+export module std.complex;
 
 import std.traits;
 
@@ -95,7 +95,7 @@ auto complex(R, I)(R re, I im)  @safe pure nothrow @nogc
 /** A complex number parametrised by a type $(D T), which must be either
     $(D float), $(D double) or $(D real).
 */
-struct Complex(T)  if (isFloatingPoint!T)
+export struct Complex(T)  if (isFloatingPoint!T)
 {
     import std.format : FormatSpec;
     import std.range.primitives : isOutputRange;
@@ -857,7 +857,7 @@ Complex!T cos(T)(Complex!T z)  @safe pure nothrow @nogc
     x87 $(I fsincos) instruction when possible, this function is no faster
     than calculating cos(y) and sin(y) separately.
 */
-Complex!real expi(real y)  @trusted pure nothrow @nogc
+export Complex!real expi(real y)  @trusted pure nothrow @nogc
 {
     import std.math : cos, sin;
     return Complex!real(cos(y), sin(y));
