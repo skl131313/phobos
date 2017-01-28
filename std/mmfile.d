@@ -13,7 +13,7 @@
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
  */
-module std.mmfile;
+export module std.mmfile;
 
 private import std.file;
 private import core.stdc.stdio;
@@ -48,7 +48,7 @@ else
 /**
  * MmFile objects control the memory mapped file resource.
  */
-class MmFile
+export class MmFile
 {
     /**
      * The mode the memory mapped file is opened with.
