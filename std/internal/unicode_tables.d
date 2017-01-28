@@ -50,7 +50,7 @@ struct CompEntry
     dchar rhs, composed;
 }
 
-struct UnicodeProperty
+export struct UnicodeProperty
 {
     string name;
     ubyte[] compressed;
@@ -63,7 +63,7 @@ struct TrieEntry(T...)
     size_t[] data;
 }
 
-@property immutable(SimpleCaseEntry[]) simpleCaseTable()
+@property export immutable(SimpleCaseEntry[]) simpleCaseTable()
 {
 alias SCE = SimpleCaseEntry;
 static immutable SCE[] t = [
@@ -609,7 +609,7 @@ SCE(0x1ffa, 1, 0x82),SCE(0x1f7d, 0, 0x42),SCE(0x1ffb, 1, 0x82),SCE(0x1ff3, 0, 0x
 SCE(0x1ffc, 1, 0x2),SCE(0x24c0, 0, 0x82),SCE(0x24da, 1, 0x42),];
 return t;
 }
-@property immutable(FullCaseEntry[]) fullCaseTable()
+@property export immutable(FullCaseEntry[]) fullCaseTable()
 {
 alias FCE = FullCaseEntry;
 static immutable FCE[] t = [
@@ -1210,7 +1210,7 @@ FCE("ⓚ", 1, 2, 1),];
 return t;
 }
 
-struct uniProps
+export struct uniProps
 {
 private alias _U = immutable(UnicodeProperty);
 @property static _U[] tab() pure { return _tab; }
@@ -2874,7 +2874,7 @@ _U("Zs", Zs),
 ];
 }
 
-struct blocks
+export struct blocks
 {
 private alias _U = immutable(UnicodeProperty);
 @property static _U[] tab() pure { return _tab; }
@@ -3324,7 +3324,7 @@ _U("Yi Syllables", Yi_Syllables),
 ];
 }
 
-struct scripts
+export struct scripts
 {
 private alias _U = immutable(UnicodeProperty);
 @property static _U[] tab() pure nothrow @nogc { return _tab; }
@@ -3629,7 +3629,7 @@ _U("Yi", Yi),
 ];
 }
 
-struct hangul
+export struct hangul
 {
 private alias _U = immutable(UnicodeProperty);
 @property static _U[] tab() pure nothrow @nogc { return _tab; }
@@ -3931,7 +3931,7 @@ bool isWhiteGen(dchar ch) @safe pure nothrow @nogc
     }
 }
 
-bool isHangL(dchar ch) @safe pure nothrow
+export bool isHangL(dchar ch) @safe pure nothrow
 {
     if (ch < 4352) return false;
     if (ch < 4448) return true;
@@ -3940,7 +3940,7 @@ bool isHangL(dchar ch) @safe pure nothrow
     return false;
 }
 
-bool isHangV(dchar ch) @safe pure nothrow
+export bool isHangV(dchar ch) @safe pure nothrow
 {
     if (ch < 4448) return false;
     if (ch < 4520) return true;
@@ -3949,7 +3949,7 @@ bool isHangV(dchar ch) @safe pure nothrow
     return false;
 }
 
-bool isHangT(dchar ch) @safe pure nothrow
+export bool isHangT(dchar ch) @safe pure nothrow
 {
     if (ch < 4520) return false;
     if (ch < 4608) return true;
