@@ -55,7 +55,7 @@ Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
          http://www.boost.org/LICENSE_1_0.txt)
 */
-module std.random;
+export module std.random;
 
 
 import std.range.primitives;
@@ -247,7 +247,7 @@ template isSeedable(Rng)
 /**
 Linear Congruential generator.
  */
-struct LinearCongruentialEngine(UIntType, UIntType a, UIntType c, UIntType m)
+export struct LinearCongruentialEngine(UIntType, UIntType a, UIntType c, UIntType m)
     if (isUnsigned!UIntType)
 {
     ///Mark this as a Rng
@@ -526,10 +526,10 @@ alias MinstdRand = LinearCongruentialEngine!(uint, 48271, 0, 2147483647);
 /**
 The $(LUCKY Mersenne Twister) generator.
  */
-struct MersenneTwisterEngine(UIntType, size_t w, size_t n, size_t m, size_t r,
-                             UIntType a, size_t u, size_t s,
-                             UIntType b, size_t t,
-                             UIntType c, size_t l)
+export struct MersenneTwisterEngine(UIntType, size_t w, size_t n, size_t m, size_t r,
+                                    UIntType a, size_t u, size_t s,
+                                    UIntType b, size_t t,
+                                    UIntType c, size_t l)
     if (isUnsigned!UIntType)
 {
     static assert(0 < w && w <= UIntType.sizeof * 8);
@@ -830,7 +830,7 @@ alias Mt19937 = MersenneTwisterEngine!(uint, 32, 624, 397, 31,
  *  $(TR $(TD 192)  $(TD 2^192 - 2^32))
  * )
  */
-struct XorshiftEngine(UIntType, UIntType bits, UIntType a, UIntType b, UIntType c)
+export struct XorshiftEngine(UIntType, UIntType bits, UIntType a, UIntType b, UIntType c)
     if (isUnsigned!UIntType)
 {
     static assert(bits == 32 || bits == 64 || bits == 96 || bits == 128 || bits == 160 || bits == 192,
@@ -1115,7 +1115,7 @@ random number sequences every run.
 Returns:
 A single unsigned integer seed value, different on each successive call
 */
-@property uint unpredictableSeed() @trusted
+@property export uint unpredictableSeed() @trusted
 {
     import core.thread : Thread, getpid, MonoTime;
     static bool seeded;
@@ -1164,7 +1164,7 @@ and initialized to an unpredictable value for each thread.
 Returns:
 A singleton instance of the default random number generator
  */
-@property ref Random rndGen() @safe
+@property export ref Random rndGen() @safe
 {
     import std.algorithm.iteration : map;
     import std.range : repeat;
@@ -2153,7 +2153,7 @@ foreach (e; randomCover(a, rndGen))  // ... so this second random cover
 }
 ----
  */
-struct RandomCover(Range, UniformRNG = void)
+export struct RandomCover(Range, UniformRNG = void)
     if (isRandomAccessRange!Range && (isUniformRNG!UniformRNG || is(UniformRNG == void)))
 {
     private Range _input;
@@ -2422,7 +2422,7 @@ foreach (e; randomSample(a, 5, rndGen))  // ... so this second random
 }
 ----
 */
-struct RandomSample(Range, UniformRNG = void)
+export struct RandomSample(Range, UniformRNG = void)
     if (isInputRange!Range && (isUniformRNG!UniformRNG || is(UniformRNG == void)))
 {
     private size_t _available, _toSelect;
