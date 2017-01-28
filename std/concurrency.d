@@ -61,8 +61,7 @@
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
  */
-module std.concurrency;
-
+export module std.concurrency;
 
 public
 {
@@ -94,7 +93,7 @@ private
         linkDead,
     }
 
-    struct Message
+    export struct Message
     {
         MsgType type;
         Variant data;
@@ -197,7 +196,7 @@ private
         }
     }
 
-    @property ref ThreadInfo thisInfo() nothrow
+    @property export ref ThreadInfo thisInfo() nothrow
     {
         if ( scheduler is null )
             return ThreadInfo.thisInfo;
@@ -221,7 +220,7 @@ static ~this()
  * Thrown on calls to $(D receiveOnly) if a message other than the type
  * the receiving thread expected is sent.
  */
-class MessageMismatch : Exception
+export class MessageMismatch : Exception
 {
     this( string msg = "Unexpected message type" ) @safe pure
     {
@@ -234,7 +233,7 @@ class MessageMismatch : Exception
  * Thrown on calls to $(D receive) if the thread that spawned the receiving
  * thread has terminated and no more messages exist.
  */
-class OwnerTerminated : Exception
+export class OwnerTerminated : Exception
 {
     this( Tid t, string msg = "Owner terminated" ) @safe pure
     {
@@ -249,7 +248,7 @@ class OwnerTerminated : Exception
 /**
  * Thrown if a linked thread has terminated.
  */
-class LinkTerminated : Exception
+export class LinkTerminated : Exception
 {
     this( Tid t, string msg = "Link terminated" ) @safe pure
     {
@@ -266,7 +265,7 @@ class LinkTerminated : Exception
  * $(REF prioritySend, std,concurrency) and the receiver does not have a handler
  * for a message of this type.
  */
-class PriorityMessageException : Exception
+export class PriorityMessageException : Exception
 {
     this( Variant vals )
     {
@@ -285,7 +284,7 @@ class PriorityMessageException : Exception
  * Thrown on mailbox crowding if the mailbox is configured with
  * $(D OnCrowding.throwException).
  */
-class MailboxFull : Exception
+export class MailboxFull : Exception
 {
     this( Tid t, string msg = "Mailbox full" ) @safe pure
     {
@@ -301,7 +300,7 @@ class MailboxFull : Exception
  * Thrown when a Tid is missing, e.g. when $(D ownerTid) doesn't
  * find an owner thread.
  */
-class TidMissingException : Exception
+export class TidMissingException : Exception
 {
     import std.exception : basicExceptionCtors;
     mixin basicExceptionCtors;
@@ -316,10 +315,10 @@ class TidMissingException : Exception
 /**
  * An opaque type used to represent a logical thread.
  */
-struct Tid
+export struct Tid
 {
 private:
-    this( MessageBox m ) @safe
+    export this( MessageBox m ) @safe
     {
         mbox = m;
     }
@@ -360,7 +359,7 @@ public:
 /**
  * Returns the caller's Tid.
  */
-@property Tid thisTid() @safe
+@property export Tid thisTid() @safe
 {
     // TODO: remove when concurrency is safe
     auto trus = delegate() @trusted
@@ -380,7 +379,7 @@ public:
  * Throws: A $(D TidMissingException) exception if
  * there is no owner thread.
  */
-@property Tid ownerTid()
+@property export Tid ownerTid()
 {
     import std.exception : enforce;
 
@@ -1025,7 +1024,7 @@ private void unregisterMe()
  *  true if the name is available and tid is not known to represent a
  *  defunct thread.
  */
-bool register( string name, Tid tid )
+export bool register( string name, Tid tid )
 {
     synchronized( registryLock )
     {
@@ -1049,7 +1048,7 @@ bool register( string name, Tid tid )
  * Returns:
  *  true if the name is registered, false if not.
  */
-bool unregister( string name )
+export bool unregister( string name )
 {
     import std.algorithm.searching : countUntil;
     import std.algorithm.mutation : remove, SwapStrategy;
@@ -1078,7 +1077,7 @@ bool unregister( string name )
  * Returns:
  *  The associated Tid or Tid.init if name is not registered.
  */
-Tid locate( string name )
+export Tid locate( string name )
 {
     synchronized( registryLock )
     {
@@ -1101,7 +1100,7 @@ Tid locate( string name )
  * with each logical thread.  It contains all implementation-level information
  * needed by the internal API.
  */
-struct ThreadInfo
+export struct ThreadInfo
 {
     Tid       ident;
     bool[Tid] links;
@@ -1173,7 +1172,7 @@ struct ThreadInfo
  * must be called within main().  This yields control to the scheduler and
  * will ensure that any spawned threads are executed in an expected manner.
  */
-interface Scheduler
+export interface Scheduler
 {
     /**
      * Spawns the supplied op and starts the Scheduler.
@@ -1253,7 +1252,7 @@ interface Scheduler
  * and may be instantiated and used, but is not a necessary part of the
  * default functioning of this module.
  */
-class ThreadScheduler :
+export class ThreadScheduler :
     Scheduler
 {
     /**
@@ -1311,7 +1310,7 @@ class ThreadScheduler :
  * This is an example scheduler that creates a new Fiber per call to spawn
  * and multiplexes the execution of all fibers within the main thread.
  */
-class FiberScheduler :
+export class FiberScheduler :
     Scheduler
 {
     /**
@@ -1538,7 +1537,7 @@ private:
  * when setting a Scheduler, scheduler.start() should be called in main.  This
  * routine will not return until program execution is complete.
  */
-__gshared Scheduler scheduler;
+export __gshared Scheduler scheduler;
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1550,7 +1549,7 @@ __gshared Scheduler scheduler;
  * If the caller is a Fiber and is not a Generator, this function will call
  * scheduler.yield() or Fiber.yield(), as appropriate.
  */
-void yield() nothrow
+export void yield() nothrow
 {
     auto fiber = Fiber.getThis();
     if (!(cast(IsGenerator) fiber))
@@ -1566,7 +1565,7 @@ void yield() nothrow
 
 
 /// Used to determine whether a Generator is running.
-private interface IsGenerator {}
+private export interface IsGenerator {}
 
 
 /**
@@ -1804,7 +1803,7 @@ private
      * get() call is effectively local.  setMaxMsgs may be used by any thread
      * to limit the size of the message queue.
      */
-    class MessageBox
+    export class MessageBox
     {
         this() @trusted /* TODO: make @safe after relevant druntime PR gets merged */
         {
@@ -2175,14 +2174,14 @@ private
         //////////////////////////////////////////////////////////////////////
 
 
-        bool mboxFull()
+        export bool mboxFull()
         {
             return m_maxMsgs &&
                    m_maxMsgs <= m_localMsgs + m_sharedBox.length;
         }
 
 
-        void updateMsgCount()
+        export void updateMsgCount()
         {
             m_localMsgs = m_localBox.length;
         }
@@ -2194,20 +2193,20 @@ private
         //////////////////////////////////////////////////////////////////////
 
 
-        pure bool isControlMsg( ref Message msg )
+        export pure bool isControlMsg( ref Message msg )
         {
             return msg.type != MsgType.standard &&
                    msg.type != MsgType.priority;
         }
 
 
-        pure bool isPriorityMsg( ref Message msg )
+        export pure bool isPriorityMsg( ref Message msg )
         {
             return msg.type == MsgType.priority;
         }
 
 
-        pure bool isLinkDeadMsg( ref Message msg )
+        export pure bool isLinkDeadMsg( ref Message msg )
         {
             return msg.type == MsgType.linkDead;
         }
@@ -2255,7 +2254,7 @@ private
     /*
      *
      */
-    struct List(T)
+    export struct List(T)
     {
         struct Range
         {
@@ -2388,7 +2387,7 @@ private
 
 
     private:
-        struct Node
+        export struct Node
         {
             Node*   next;
             T       val;
@@ -2542,7 +2541,7 @@ version( unittest )
 // initOnce
 //////////////////////////////////////////////////////////////////////////////
 
-private @property Mutex initOnceLock()
+private export @property Mutex initOnceLock()
 {
     __gshared Mutex lock;
     if (auto mtx = atomicLoad!(MemoryOrder.acq)(*cast(shared)&lock))
