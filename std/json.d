@@ -15,7 +15,7 @@ Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
          http://www.boost.org/LICENSE_1_0.txt)
 */
-module std.json;
+export module std.json;
 
 import std.conv;
 import std.range.primitives;
@@ -98,7 +98,7 @@ enum JSON_TYPE : byte
 /**
 JSON value node
 */
-struct JSONValue
+export struct JSONValue
 {
     import std.exception : enforceEx, enforce;
 
@@ -1066,7 +1066,7 @@ If $(D pretty) is false no whitespaces are generated.
 If $(D pretty) is true serialized string is formatted to be human-readable.
 Set the $(specialFloatLiterals) flag is set in $(D options) to encode NaN/Infinity as strings.
 */
-string toJSON(const ref JSONValue root, in bool pretty = false, in JSONOptions options = JSONOptions.none) @safe
+export string toJSON(const ref JSONValue root, in bool pretty = false, in JSONOptions options = JSONOptions.none) @safe
 {
     auto json = appender!string();
 
@@ -1255,8 +1255,8 @@ string toJSON(const ref JSONValue root, in bool pretty = false, in JSONOptions o
     return json.data;
 }
 
-private void appendJSONChar(ref Appender!string dst, dchar c, JSONOptions opts,
-                            scope void delegate(string) error) @safe
+private export void appendJSONChar(ref Appender!string dst, dchar c, JSONOptions opts,
+                                   scope void delegate(string) error) @safe
 {
     import std.uni : isControl;
 
@@ -1294,7 +1294,7 @@ private void appendJSONChar(ref Appender!string dst, dchar c, JSONOptions opts,
 /**
 Exception thrown on JSON errors
 */
-class JSONException : Exception
+export class JSONException : Exception
 {
     this(string msg, int line = 0, int pos = 0) pure nothrow @safe
     {
