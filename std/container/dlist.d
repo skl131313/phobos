@@ -14,7 +14,7 @@ boost.org/LICENSE_1_0.txt)).
 
 Authors: $(HTTP erdani.com, Andrei Alexandrescu)
 */
-module std.container.dlist;
+export module std.container.dlist;
 
 ///
 unittest
@@ -59,7 +59,7 @@ A DList Node without payload. Used to handle the sentinel node (henceforth "sent
 
 Also used for parts of the code that don't depend on the payload type.
  +/
-private struct BaseNode
+private export struct BaseNode
 {
     private BaseNode* _prev = null;
     private BaseNode* _next = null;
@@ -88,7 +88,7 @@ private struct BaseNode
 /+
 The base DList Range. Contains Range primitives that don't depend on payload type.
  +/
-private struct DRange
+private export struct DRange
 {
     unittest
     {
@@ -100,13 +100,13 @@ nothrow @safe pure:
     private BaseNode* _first;
     private BaseNode* _last;
 
-    private this(BaseNode* first, BaseNode* last)
+    private export this(BaseNode* first, BaseNode* last)
     {
         assert((first is null) == (last is null), "Dlist.Range.this: Invalid arguments");
         _first = first;
         _last = last;
     }
-    private this(BaseNode* n)
+    private export this(BaseNode* n)
     {
         this(n, n);
     }
