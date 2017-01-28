@@ -53,7 +53,7 @@ Source: $(PHOBOSSRC std/algorithm/_comparison.d)
 Macros:
 T2=$(TR $(TDNW $(LREF $1)) $(TD $+))
  */
-module std.algorithm.comparison;
+export module std.algorithm.comparison;
 
 // FIXME
 import std.functional; // : unaryFun, binaryFun;
