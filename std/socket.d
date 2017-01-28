@@ -42,7 +42,7 @@
  * Source:  $(PHOBOSSRC std/_socket.d)
  */
 
-module std.socket;
+export module std.socket;
 
 import core.stdc.stdint, core.stdc.string, std.string, core.stdc.stdlib, std.conv;
 
@@ -631,7 +631,7 @@ private mixin template socketOSExceptionCtors()
 /**
  * Class for exceptions thrown from an `InternetHost`.
  */
-class HostException: SocketOSException
+export class HostException: SocketOSException
 {
     mixin socketOSExceptionCtors;
 }
@@ -642,7 +642,7 @@ class HostException: SocketOSException
  * Consider using `getAddress`, `parseAddress` and `Address` methods
  * instead of using this class directly.
  */
-class InternetHost
+export class InternetHost
 {
     /// These members are populated when one of the following functions are called successfully:
     string name;
@@ -1245,7 +1245,7 @@ class AddressException: SocketOSException
  *     writefln("  Lookup error: %s", e.msg);
  * ---
  */
-abstract class Address
+export abstract class Address
 {
     /// Returns pointer to underlying $(D sockaddr) structure.
     abstract @property sockaddr* name() pure nothrow @nogc;
@@ -1468,7 +1468,7 @@ public:
  * Consider using $(D getAddress), $(D parseAddress) and $(D Address) methods
  * instead of using this class directly.
  */
-class InternetAddress: Address
+export class InternetAddress: Address
 {
 protected:
     sockaddr_in sin;
@@ -2028,7 +2028,7 @@ static if (is(sockaddr_un))
 /**
  * Class for exceptions thrown by $(D Socket.accept).
  */
-class SocketAcceptException: SocketOSException
+export class SocketAcceptException: SocketOSException
 {
     mixin socketOSExceptionCtors;
 }
@@ -2098,7 +2098,7 @@ struct TimeVal
  * $(D fd_set), $(D SocketSet) is not statically limited to $(D FD_SETSIZE)
  * or any other limit, and grows as needed.
  */
-class SocketSet
+export class SocketSet
 {
 private:
     version (Windows)
@@ -2525,7 +2525,7 @@ enum SocketOption: int
  * $(D Socket) is a class that creates a network communication endpoint using
  * the Berkeley sockets interface.
  */
-class Socket
+export class Socket
 {
 private:
     socket_t sock;
@@ -3522,7 +3522,7 @@ unittest
  *
  * Throws: $(D SocketException) if creation of the sockets fails.
  */
-Socket[2] socketPair() @trusted
+export Socket[2] socketPair() @trusted
 {
     version(Posix)
     {
