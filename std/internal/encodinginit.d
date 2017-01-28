@@ -9,7 +9,7 @@
     Authors:   Martin Nowak, Steven Schveighoffer
     Source:    $(PHOBOSSRC std/internal/_encodinginit.d)
   +/
-module std.internal.encodinginit;
+export module std.internal.encodinginit;
 
 extern(C) void std_encoding_shared_static_this();
 
