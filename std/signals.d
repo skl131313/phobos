@@ -58,7 +58,7 @@
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
  */
-module std.signals;
+export module std.signals;
 
 import std.stdio;
 import core.stdc.stdlib : calloc, realloc, free;
