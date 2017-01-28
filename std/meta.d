@@ -69,7 +69,7 @@
  * Source:    $(PHOBOSSRC std/_meta.d)
  */
 
-module std.meta;
+export module std.meta;
 
 /**
  * Creates a sequence of zero or more aliases. This is most commonly
