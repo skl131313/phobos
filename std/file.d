@@ -18,7 +18,7 @@ Authors:   $(HTTP digitalmars.com, Walter Bright),
            Jonathan M Davis
 Source:    $(PHOBOSSRC std/_file.d)
  */
-module std.file;
+export module std.file;
 
 import core.stdc.stdlib, core.stdc.string, core.stdc.errno;
 
@@ -95,7 +95,7 @@ else version(Posix)
 /++
     Exception thrown for file I/O errors.
  +/
-class FileException : Exception
+export class FileException : Exception
 {
     import std.conv : text, to;
 
@@ -269,7 +269,7 @@ void[] read(R)(auto ref R name, size_t upTo = size_t.max)
     static assert(__traits(compiles, read(TestAliasedString(null))));
 }
 
-version (Posix) private void[] readImpl(const(char)[] name, const(FSChar)* namez, size_t upTo = size_t.max) @trusted
+version (Posix) private export void[] readImpl(const(char)[] name, const(FSChar)* namez, size_t upTo = size_t.max) @trusted
 {
     import std.algorithm.comparison : min;
     import std.array : uninitializedArray;
@@ -318,7 +318,7 @@ version (Posix) private void[] readImpl(const(char)[] name, const(FSChar)* namez
 }
 
 
-version (Windows) private void[] readImpl(const(char)[] name, const(FSChar)* namez, size_t upTo = size_t.max) @safe
+version (Windows) private export void[] readImpl(const(char)[] name, const(FSChar)* namez, size_t upTo = size_t.max) @safe
 {
     import std.algorithm.comparison : min;
     import std.array : uninitializedArray;
@@ -545,7 +545,7 @@ void append(R)(auto ref R name, const void[] buffer)
 
 // Posix implementation helper for write and append
 
-version(Posix) private void writeImpl(const(char)[] name, const(FSChar)* namez,
+version(Posix) private export void writeImpl(const(char)[] name, const(FSChar)* namez,
         in void[] buffer, bool append) @trusted
 {
     import std.conv : octal;
@@ -576,7 +576,7 @@ version(Posix) private void writeImpl(const(char)[] name, const(FSChar)* namez,
 
 // Windows implementation helper for write and append
 
-version(Windows) private void writeImpl(const(char)[] name, const(FSChar)* namez,
+version(Windows) private export void writeImpl(const(char)[] name, const(FSChar)* namez,
         in void[] buffer, bool append) @trusted
 {
     HANDLE h;
@@ -662,7 +662,7 @@ void rename(RF, RT)(auto ref RF from, auto ref RT to)
     static assert(__traits(compiles, rename(TestAliasedString(null), "".byChar)));
 }
 
-private void renameImpl(const(char)[] f, const(char)[] t, const(FSChar)* fromz, const(FSChar)* toz) @trusted
+private export void renameImpl(const(char)[] f, const(char)[] t, const(FSChar)* fromz, const(FSChar)* toz) @trusted
 {
     version(Windows)
     {
@@ -737,7 +737,7 @@ void remove(R)(auto ref R name)
     static assert(__traits(compiles, remove(TestAliasedString("foo"))));
 }
 
-private void removeImpl(const(char)[] name, const(FSChar)* namez) @trusted
+private export void removeImpl(const(char)[] name, const(FSChar)* namez) @trusted
 {
     version(Windows)
     {
@@ -791,7 +791,7 @@ version(Windows) private WIN32_FILE_ATTRIBUTE_DATA getFileAttributesWin(R)(R nam
     return fad;
 }
 
-version(Windows) private ulong makeUlong(DWORD dwLow, DWORD dwHigh) @safe pure nothrow @nogc
+version(Windows) private export ulong makeUlong(DWORD dwLow, DWORD dwHigh) @safe pure nothrow @nogc
 {
     ULARGE_INTEGER li;
     li.LowPart  = dwLow;
@@ -1447,7 +1447,8 @@ bool exists(R)(auto ref R name)
     return exists!(StringTypeOf!R)(name);
 }
 
-private bool existsImpl(const(FSChar)* namez) @trusted nothrow @nogc
+/* Workaround */
+private export bool existsImpl(const(FSChar)* namez) @trusted nothrow @nogc
 {
     version(Windows)
     {
@@ -1772,7 +1773,7 @@ assert(!attrIsDir(getAttributes("/etc/fonts/fonts.conf")));
 assert(!attrIsDir(getLinkAttributes("/etc/fonts/fonts.conf")));
 --------------------
   +/
-bool attrIsDir(uint attributes) @safe pure nothrow @nogc
+export bool attrIsDir(uint attributes) @safe pure nothrow @nogc
 {
     version(Windows)
     {
@@ -1921,7 +1922,7 @@ assert(attrIsFile(getAttributes("/etc/fonts/fonts.conf")));
 assert(attrIsFile(getLinkAttributes("/etc/fonts/fonts.conf")));
 --------------------
   +/
-bool attrIsFile(uint attributes) @safe pure nothrow @nogc
+export bool attrIsFile(uint attributes) @safe pure nothrow @nogc
 {
     version(Windows)
     {
@@ -2096,7 +2097,7 @@ assert(!getAttributes("/tmp/alink").isSymlink);
 assert(getLinkAttributes("/tmp/alink").isSymlink);
 --------------------
   +/
-bool attrIsSymlink(uint attributes) @safe pure nothrow @nogc
+export bool attrIsSymlink(uint attributes) @safe pure nothrow @nogc
 {
     version(Windows)
         return (attributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0;
@@ -2235,7 +2236,7 @@ private bool ensureDirExists(in char[] pathname)
  * Throws: $(D FileException) on error.
  */
 
-void mkdirRecurse(in char[] pathname)
+export void mkdirRecurse(in char[] pathname)
 {
     import std.path : dirName, baseName;
 
@@ -2548,7 +2549,7 @@ version(Posix) @system unittest // input range of dchars
  * Get the current working directory.
  * Throws: $(D FileException) on error.
  */
-version(Windows) string getcwd()
+version(Windows) export string getcwd()
 {
     import std.conv : to;
     import std.utf : toUTF8;
@@ -2615,7 +2616,7 @@ else version (NetBSD)
  * Throws:
  * $(REF Exception, std,object)
  */
-@trusted string thisExePath ()
+@trusted export string thisExePath ()
 {
     version (OSX)
     {
@@ -2873,7 +2874,7 @@ assert(!de2.isFile);
 }
 else version(Windows)
 {
-    struct DirEntry
+    export struct DirEntry
     {
         import std.utf : toUTF8;
     public:
@@ -3329,7 +3330,7 @@ void copy(RF, RT)(auto ref RF from, auto ref RT to, PreserveAttributes preserve 
     assert(__traits(compiles, copy("from.txt", "to.txt")));
 }
 
-private void copyImpl(const(char)[] f, const(char)[] t, const(FSChar)* fromz, const(FSChar)* toz,
+private export void copyImpl(const(char)[] f, const(char)[] t, const(FSChar)* fromz, const(FSChar)* toz,
         PreserveAttributes preserve) @trusted
 {
     version(Windows)
@@ -3462,7 +3463,7 @@ private void copyImpl(const(char)[] f, const(char)[] t, const(FSChar)* fromz, co
         $(D FileException) if there is an error (including if the given
         file is not a directory).
  +/
-void rmdirRecurse(in char[] pathname)
+export void rmdirRecurse(in char[] pathname)
 {
     //No references to pathname will be kept after rmdirRecurse,
     //so the cast is safe
@@ -3477,7 +3478,7 @@ void rmdirRecurse(in char[] pathname)
         $(D FileException) if there is an error (including if the given
         file is not a directory).
  +/
-void rmdirRecurse(ref DirEntry de)
+export void rmdirRecurse(ref DirEntry de)
 {
     if (!de.isDir)
         throw new FileException(de.name, "Not a directory");
@@ -3507,7 +3508,7 @@ void rmdirRecurse(ref DirEntry de)
 //"rmdirRecurse(in char[] pathname)" implementation. That is needlessly
 //expensive.
 //A DirEntry is a bit big (72B), so keeping the "by ref" signature is desirable.
-void rmdirRecurse(DirEntry de)
+export void rmdirRecurse(DirEntry de)
 {
     rmdirRecurse(de);
 }
@@ -3584,7 +3585,7 @@ enum SpanMode
     breadth,
 }
 
-private struct DirIteratorImpl
+private export struct DirIteratorImpl
 {
     import std.array : Appender, appender;
     SpanMode _mode;
@@ -3805,7 +3806,7 @@ private struct DirIteratorImpl
     }
 }
 
-struct DirIterator
+export struct DirIterator
 {
 private:
     RefCounted!(DirIteratorImpl, RefCountedAutoInitialize.no) impl;
@@ -3874,7 +3875,7 @@ foreach (d; parallel(dFiles, 1)) //passes by 1 file to each thread
 }
 --------------------
  +/
-auto dirEntries(string path, SpanMode mode, bool followSymlink = true)
+export auto dirEntries(string path, SpanMode mode, bool followSymlink = true)
 {
     return DirIterator(path, mode, followSymlink);
 }
@@ -4001,7 +4002,7 @@ foreach (d; dFiles)
     writeln(d.name);
 --------------------
  +/
-auto dirEntries(string path, string pattern, SpanMode mode,
+export auto dirEntries(string path, string pattern, SpanMode mode,
     bool followSymlink = true)
 {
     import std.algorithm.iteration : filter;
@@ -4183,7 +4184,7 @@ meantime.
 The POSIX $(D tempDir) algorithm is inspired by Python's
 $(LINK2 http://docs.python.org/library/tempfile.html#tempfile.tempdir, $(D tempfile.tempdir)).
 */
-string tempDir() @trusted
+export string tempDir() @trusted
 {
     static string cache;
     if (cache is null)
