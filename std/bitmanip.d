@@ -19,7 +19,7 @@ Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
          http://www.boost.org/LICENSE_1_0.txt)
 */
-module std.bitmanip;
+export module std.bitmanip;
 
 //debug = bitarray;                // uncomment to turn on debugging printf's
 
@@ -676,7 +676,7 @@ struct DoubleRep
 ----
 */
 
-struct DoubleRep
+export struct DoubleRep
 {
     union
     {
@@ -737,7 +737,7 @@ struct DoubleRep
  * An array of bits.
  */
 
-struct BitArray
+export struct BitArray
 {
 private:
 
@@ -2162,19 +2162,19 @@ T swapEndian(T)(T val) @safe pure nothrow @nogc
         static assert(0, T.stringof ~ " unsupported by swapEndian.");
 }
 
-private ushort swapEndianImpl(ushort val) @safe pure nothrow @nogc
+private export ushort swapEndianImpl(ushort val) @safe pure nothrow @nogc
 {
     return ((val & 0xff00U) >> 8) |
            ((val & 0x00ffU) << 8);
 }
 
-private uint swapEndianImpl(uint val) @trusted pure nothrow @nogc
+private export uint swapEndianImpl(uint val) @trusted pure nothrow @nogc
 {
     import core.bitop : bswap;
     return bswap(val);
 }
 
-private ulong swapEndianImpl(ulong val) @trusted pure nothrow @nogc
+private export ulong swapEndianImpl(ulong val) @trusted pure nothrow @nogc
 {
     import core.bitop : bswap;
     immutable ulong res = bswap(cast(uint)val);
