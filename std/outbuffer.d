@@ -8,7 +8,7 @@ Serialize data to $(D ubyte) arrays.
  * Authors:   $(HTTP digitalmars.com, Walter Bright)
  * Source:    $(PHOBOSSRC std/_outbuffer.d)
  */
-module std.outbuffer;
+export module std.outbuffer;
 
 import core.stdc.stdarg; // : va_list;
 
@@ -24,7 +24,7 @@ import core.stdc.stdarg; // : va_list;
  * ensure proper alignment, e.g. by using alignSize((void*).sizeof).
  */
 
-class OutBuffer
+export class OutBuffer
 {
     ubyte[] data;
     size_t offset;
