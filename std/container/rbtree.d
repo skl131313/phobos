@@ -14,7 +14,7 @@ boost.org/LICENSE_1_0.txt)).
 
 Authors: Steven Schveighoffer, $(HTTP erdani.com, Andrei Alexandrescu)
 */
-module std.container.rbtree;
+export module std.container.rbtree;
 
 ///
 @safe pure unittest
