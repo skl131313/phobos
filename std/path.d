@@ -49,7 +49,7 @@
     Source:
         $(PHOBOSSRC std/_path.d)
 */
-module std.path;
+export module std.path;
 
 
 // FIXME
@@ -100,7 +100,7 @@ else static assert (0, "unsupported platform");
     On Windows, this includes both $(D `\`) and $(D `/`).
     On POSIX, it's just $(D `/`).
 */
-bool isDirSeparator(dchar c)  @safe pure nothrow @nogc
+export bool isDirSeparator(dchar c)  @safe pure nothrow @nogc
 {
     if (c == '/') return true;
     version(Windows) if (c == '\\') return true;
@@ -114,7 +114,7 @@ bool isDirSeparator(dchar c)  @safe pure nothrow @nogc
     the drive letter from the rest of the path.  On POSIX, this always
     returns false.
 */
-private bool isDriveSeparator(dchar c)  @safe pure nothrow @nogc
+private export bool isDriveSeparator(dchar c)  @safe pure nothrow @nogc
 {
     version(Windows) return c == ':';
     else return false;
@@ -122,7 +122,7 @@ private bool isDriveSeparator(dchar c)  @safe pure nothrow @nogc
 
 
 /*  Combines the isDirSeparator and isDriveSeparator tests. */
-version(Windows) private bool isSeparator(dchar c)  @safe pure nothrow @nogc
+version(Windows) private export bool isSeparator(dchar c)  @safe pure nothrow @nogc
 {
     return isDirSeparator(c) || isDriveSeparator(c);
 }
@@ -2573,7 +2573,7 @@ else version (Posix)
     See_Also:
         $(LREF asAbsolutePath) which does not allocate
 */
-string absolutePath(string path, lazy string base = getcwd())
+export string absolutePath(string path, lazy string base = getcwd())
     @safe pure
 {
     import std.array : array;
