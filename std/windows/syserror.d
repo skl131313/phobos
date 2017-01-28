@@ -71,7 +71,7 @@ import std.conv : to;
 import std.format : formattedWrite;
 import core.sys.windows.windows;
 
-string sysErrorString(
+export string sysErrorString(
     DWORD errCode,
     // MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT) is the user's default language
     int langId = LANG_NEUTRAL,
@@ -115,7 +115,7 @@ bool putSysError(Writer)(DWORD code, Writer w, /*WORD*/int langId = 0)
 }
 
 
-class WindowsException : Exception
+export class WindowsException : Exception
 {
     import core.sys.windows.windows : DWORD;
 
