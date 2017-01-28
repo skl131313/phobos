@@ -1,4 +1,4 @@
-// Written in the D programming language.
+﻿// Written in the D programming language.
 
 /**
 Standard I/O functions that extend $(B core.stdc.stdio).  $(B core.stdc.stdio)
@@ -11,7 +11,7 @@ Authors:   $(HTTP digitalmars.com, Walter Bright),
            $(HTTP erdani.org, Andrei Alexandrescu),
            Alex Rønne Petersen
  */
-module std.stdio;
+export module std.stdio;
 
 public import core.stdc.stdio;
 import core.stdc.stddef; // wchar_t
@@ -21,7 +21,6 @@ import std.range.primitives; // ElementEncodingType, empty, front,
 import std.stdiobase;
 import std.traits; // isSomeChar, isSomeString, Unqual
 import std.typecons; // Flag
-
 
 /++
 If flag $(D KeepTerminator) is set to $(D KeepTerminator.yes), then the delimiter
@@ -348,13 +347,13 @@ Hello, Jimmy!
 % __
 )
  */
-struct File
+export struct File
 {
     import std.range.primitives : ElementEncodingType;
     import std.traits : isScalarType, isArray;
     enum Orientation { unknown, narrow, wide }
 
-    private struct Impl
+    private export struct Impl
     {
         FILE * handle = null; // Is null iff this Impl is closed by another File
         uint refs = uint.max / 2;
@@ -2605,7 +2604,7 @@ $(D Range) that locks the file and allows fast writing to it.
         FILE* fps_;
 
         // the unshared version of fps
-        @property _iobuf* handle_() @trusted { return cast(_iobuf*) fps_; }
+        @property _iobuf* handle_() @trusted export { return cast(_iobuf*) fps_; }
 
         // the file's orientation (byte- or wide-oriented)
         int orientation_;
@@ -3189,7 +3188,7 @@ enum LockType
     readWrite
 }
 
-struct LockingTextReader
+export struct LockingTextReader
 {
     private File _f;
     private char _front;
@@ -3362,7 +3361,7 @@ template isFileHandle(T)
 /**
  * Property used by writeln/etc. so it can infer @safe since stdout is __gshared
  */
-private @property File trustedStdout() @trusted
+private @property File trustedStdout() @trusted export
 {
     return stdout;
 }
@@ -3892,7 +3891,7 @@ See_Also:
 $(LREF byLine)
  */
 
-struct lines
+export struct lines
 {
     private File f;
     private dchar terminator = '\n';
@@ -4138,11 +4137,11 @@ The content of $(D buffer) is reused across calls. In the
 
  In case of an I/O error, an $(D StdioException) is thrown.
 */
-auto chunks(File f, size_t size)
+export auto chunks(File f, size_t size)
 {
     return ChunksImpl(f, size);
 }
-private struct ChunksImpl
+private export struct ChunksImpl
 {
     private File f;
     private size_t size;
@@ -4256,7 +4255,7 @@ void toFile(T)(T data, string fileName)
 /*********************
  * Thrown if I/O errors happen.
  */
-class StdioException : Exception
+export class StdioException : Exception
 {
     static import core.stdc.errno;
     /// Operating system error code.
@@ -4329,7 +4328,7 @@ extern(C) void std_stdio_static_this()
 }
 
 //---------
-__gshared
+export __gshared
 {
     /** The standard input stream.
         Bugs:
@@ -4477,7 +4476,7 @@ private struct ReadlnAppender
 
 // Private implementation of readln
 version (DIGITAL_MARS_STDIO)
-private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation /*ignored*/)
+export private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation /*ignored*/)
 {
     FLOCK(fps);
     scope(exit) FUNLOCK(fps);
@@ -4600,7 +4599,7 @@ private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orie
 }
 
 version (MICROSOFT_STDIO)
-private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation /*ignored*/)
+export private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation /*ignored*/)
 {
     FLOCK(fps);
     scope(exit) FUNLOCK(fps);
@@ -4632,7 +4631,7 @@ private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orie
 }
 
 version (HAS_GETDELIM)
-private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation orientation)
+export private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation orientation)
 {
     import core.stdc.stdlib : free;
     import core.stdc.wchar_ : fwide;
@@ -4734,7 +4733,7 @@ private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orie
 }
 
 version (NO_GETDELIM)
-private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation orientation)
+export private size_t readlnImpl(FILE* fps, ref char[] buf, dchar terminator, File.Orientation orientation)
 {
     import core.stdc.wchar_ : fwide;
 
