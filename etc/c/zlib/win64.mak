@@ -1,16 +1,13 @@
 # Makefile for zlib64
 
 MODEL=64
-VCDIR=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
-WINDOWSSDKDIR=C:\Program Files (x86)\Windows Kits\10
-UNIVERSALCRTSDKDIR=C:\Program Files (x86)\Windows Kits\10
-UCRTVERSION=10.0.14393.0
+VCDIR=\Program Files (x86)\Microsoft Visual Studio 10.0\VC
 
 CC="$(VCDIR)\bin\amd64\cl"
 LD="$(VCDIR)\bin\amd64\link"
 LIB="$(VCDIR)\bin\amd64\lib"
 
-CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(UNIVERSALCRTSDKDIR)\Include\$(UCRTVERSION)\ucrt" /I"$(WINDOWSSDKDIR)"\Include
+CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE"
 LIBFLAGS=/nologo
 LDFLAGS=/nologo
 O=.obj
