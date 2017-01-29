@@ -68,7 +68,7 @@ Source: $(PHOBOSSRC std/algorithm/_mutation.d)
 Macros:
 T2=$(TR $(TDNW $(LREF $1)) $(TD $+))
  */
-module std.algorithm.mutation;
+export module std.algorithm.mutation;
 
 import std.range.primitives;
 import std.traits : isArray, isBlitAssignable, isNarrowString, Unqual;
