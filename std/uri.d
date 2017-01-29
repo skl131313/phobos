@@ -21,7 +21,7 @@
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
  */
-module std.uri;
+export module std.uri;
 
 //debug=uri;        // uncomment to turn on debugging writefln's
 debug(uri) private import std.stdio;
@@ -38,7 +38,7 @@ import std.exception;
 /** This Exception is thrown if something goes wrong when encoding or
 decoding a URI.
 */
-class URIException : Exception
+export class URIException : Exception
 {
     mixin basicExceptionCtors;
 }
@@ -52,9 +52,9 @@ private enum
     URI_Hash = 0x10,        // '#'
 }
 
-immutable char[16] hex2ascii = "0123456789ABCDEF";
+export immutable char[16] hex2ascii = "0123456789ABCDEF";
 
-immutable ubyte[128] uri_flags =      // indexed by character
+export immutable ubyte[128] uri_flags =      // indexed by character
     ({
         ubyte[128] uflags;
 
@@ -72,7 +72,7 @@ immutable ubyte[128] uri_flags =      // indexed by character
         return uflags;
     })();
 
-private string URI_Encode(dstring string, uint unescapedSet)
+private export string URI_Encode(dstring string, uint unescapedSet)
 {
     uint j;
     uint k;
@@ -211,7 +211,7 @@ private string URI_Encode(dstring string, uint unescapedSet)
     return R[0..Rlen].idup;
 }
 
-uint ascii2hex(dchar c)
+export uint ascii2hex(dchar c)
 {
     return (c <= '9') ? c - '0' :
         (c <= 'F') ? c - 'A' + 10 :
