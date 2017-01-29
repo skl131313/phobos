@@ -2,7 +2,7 @@
 /*
     Regular expression pattern parser.
 */
-module std.regex.internal.parser;
+export module std.regex.internal.parser;
 
 import std.regex.internal.ir, std.regex.internal.shiftor,
     std.regex.internal.bitnfa;
@@ -134,7 +134,7 @@ auto caseEnclose(CodepointSet set)
 /+
     fetch codepoint set corresponding to a name (InBlock or binary property)
 +/
-@trusted CodepointSet getUnicodeSet(in char[] name, bool negated,  bool casefold) pure
+export @trusted CodepointSet getUnicodeSet(in char[] name, bool negated,  bool casefold) pure
 {
     CodepointSet s = unicode(name);
     //FIXME: caseEnclose for new uni as Set | CaseEnclose(SET && LC)
@@ -145,7 +145,7 @@ auto caseEnclose(CodepointSet set)
     return s;
 }
 
-struct CodeGen
+export struct CodeGen
 {
 pure:
     Bytecode[] ir;                 // resulting bytecode

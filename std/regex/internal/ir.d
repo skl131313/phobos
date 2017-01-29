@@ -5,7 +5,7 @@
     This is a common ground between frontend regex component (parser)
     and backend components - generators, matchers and other "filters".
 */
-module std.regex.internal.ir;
+export module std.regex.internal.ir;
 
 package(std.regex):
 
@@ -44,13 +44,13 @@ CharMatcher[CodepointSet] matcherCache;
 }
 
 //property for \w character class
-@property CodepointSet wordCharacter() pure
+export @property CodepointSet wordCharacter() pure
 {
     return unicode.Alphabetic | unicode.Mn | unicode.Mc
         | unicode.Me | unicode.Nd | unicode.Pc;
 }
 
-@property CharMatcher wordMatcher()
+export @property CharMatcher wordMatcher()
 {
     return memoizeExpr!("CharMatcher(wordCharacter)")();
 }
@@ -228,7 +228,7 @@ IR pairedIR(IR i) pure
 }
 
 //encoded IR instruction
-struct Bytecode
+export struct Bytecode
 {
 pure:
     uint raw;
@@ -356,7 +356,7 @@ static assert(Bytecode.sizeof == 4);
 
 
 //index entry structure for name --> number of submatch
-struct NamedGroup
+export struct NamedGroup
 {
     string name;
     uint group;
@@ -461,7 +461,7 @@ interface Kickstart(Char){
 }
 
 //basic stack, just in case it gets used anywhere else then Parser
-@trusted struct Stack(T)
+@trusted export struct Stack(T)
 {
 pure:
     T[] data;
@@ -849,13 +849,13 @@ bool startOfLine()(dchar back, bool seenNl)
 }
 
 ///Exception object thrown in case of errors during regex compilation.
-public class RegexException : Exception
+public export class RegexException : Exception
 {
     mixin basicExceptionCtors;
 }
 
 // simple 128-entry bit-table used with a hash function
-struct BitTable {
+export struct BitTable {
 pure:
     uint[4] filter;
 
@@ -882,7 +882,7 @@ pure:
     }
 }
 
-struct CharMatcher {
+export struct CharMatcher {
     BitTable ascii; // fast path for ASCII
     Trie trie;      // slow path for Unicode
 pure:

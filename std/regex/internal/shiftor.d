@@ -2,7 +2,7 @@
     ShiftOr is a kickstart engine, a coarse-grained "filter" engine that finds
     potential matches to be verified by a full-blown matcher.
 */
-module std.regex.internal.shiftor;
+export module std.regex.internal.shiftor;
 
 package(std.regex):
 

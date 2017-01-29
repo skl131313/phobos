@@ -3,7 +3,7 @@
 
     For the moment undocumented, and is subject to change.
 */
-module std.regex.internal.generator;
+export module std.regex.internal.generator;
 
 /*
     Useful utility for self-testing, an infinite range of string samples

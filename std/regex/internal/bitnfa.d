@@ -7,7 +7,7 @@
     There is a great number of limitations inlcuding not tracking any state (captures)
     and not supporting even basic assertions such as ^, $  or \b.
 */
-module std.regex.internal.bitnfa;
+export module std.regex.internal.bitnfa;
 
 package(std.regex):
 
@@ -17,7 +17,7 @@ debug(std_regex_bitnfa) import std.stdio;
 import std.algorithm;
 
 
-struct HashTab
+export struct HashTab
 {
 pure:
     @disable this(this);
@@ -153,7 +153,7 @@ unittest
 // Uses the concept of CoW: a page gets modified in place
 // if the block's ref-count is 1, else a newblock is allocated
 // and ref count is decreased
-struct UIntTrie2
+export struct UIntTrie2
 {
 pure:
     ushort[] index;                       // pages --> blocks
@@ -281,7 +281,7 @@ unittest
 // Since there is no way to mark a starting position
 // we need 2 instances of BitNfa: one to find the end, and the other
 // to run backwards to find the start.
-struct BitNfa
+export struct BitNfa
 {
 pure:
     uint[128]   asciiTab;         // state mask for ascii characters

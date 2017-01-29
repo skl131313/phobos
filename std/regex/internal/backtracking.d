@@ -2,7 +2,7 @@
     Implementation of backtracking std.regex engine.
     Contains both compile-time and run-time versions.
 */
-module std.regex.internal.backtracking;
+export module std.regex.internal.backtracking;
 
 package(std.regex):
 
@@ -820,7 +820,7 @@ template BacktrackingMatcher(bool CTregex)
 
 alias Sequence(int B, int E) = staticIota!(B, E);
 
-struct CtContext
+export struct CtContext
 {
     import std.conv : to, text;
     //dirty flags
