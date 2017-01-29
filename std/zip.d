@@ -69,13 +69,13 @@ void main()
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
  */
-module std.zip;
+export module std.zip;
 
 //debug=print;
 
 /** Thrown on error.
  */
-class ZipException : Exception
+export class ZipException : Exception
 {
     this(string msg) @safe
     {
@@ -95,7 +95,7 @@ enum CompressionMethod : ushort
 /**
  * A member of the ZipArchive.
  */
-final class ArchiveMember
+export final class ArchiveMember
 {
     import std.conv : to, octal;
     import std.datetime : DosFileTime, SysTime, SysTimeToDosFileTime;
@@ -284,7 +284,7 @@ final class ArchiveMember
  * Object representing the entire archive.
  * ZipArchives are collections of ArchiveMembers.
  */
-final class ZipArchive
+export final class ZipArchive
 {
     import std.bitmanip : littleEndianToNative, nativeToLittleEndian;
     import std.algorithm.comparison : max;
