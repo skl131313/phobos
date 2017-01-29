@@ -31,16 +31,13 @@ CP=cp
 DIR=\dmd2
 
 ## Visual C directories
-VCDIR=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
-WINDOWSSDKDIR=C:\Program Files (x86)\Windows Kits\10
-UNIVERSALCRTSDKDIR=C:\Program Files (x86)\Windows Kits\10
-UCRTVERSION=10.0.14393.0
-LIBSUBDIR=x64
+VCDIR=\Program Files (x86)\Microsoft Visual Studio 10.0\VC
+SDKDIR=\Program Files (x86)\Microsoft SDKs\Windows\v7.0A
 
 ## Flags for VC compiler
 
-#CFLAGS=/Zi /nologo /I"$(VCDIR)\INCLUDE" /I"$(UNIVERSALCRTSDKDIR)\Include\$(UCRTVERSION)\ucrt" /I"$(WINDOWSSDKDIR)"\Include
-CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(UNIVERSALCRTSDKDIR)\Include\$(UCRTVERSION)\ucrt" /I"$(WINDOWSSDKDIR)"\Include
+#CFLAGS=/Zi /nologo /I"$(VCDIR)\INCLUDE" /I"$(SDKDIR)\Include"
+CFLAGS=/O2 /nologo /I"$(VCDIR)\INCLUDE" /I"$(SDKDIR)\Include"
 
 ## Location of druntime tree
 
@@ -594,12 +591,6 @@ $(LIB) : $(SRC_TO_COMPILE) \
 
 $(LIB_SHARED) : $(SRC_TO_COMPILE) \
 	$(ZLIB) $(DRUNTIME_SHARED_OBJ) $(DRUNTIME_SHARED_C_LIB) $(DRUNTIME_SHARED_DLLFIXUP) win32.mak win64.mak
-	SET LINKCMD=$(VCDIR)\bin\link.exe
-	SET VCINSTALLDIR=$(VCDIR)
-	SET UniversalCRTSdkDir=$(UNIVERSALCRTSDKDIR)
-	SET UCRTVersion=$(UCRTVERSION)
-	SET WindowsSdkDir=$(WINDOWSSDKDIR)
-	SET LIB="$(UNIVERSALCRTSDKDIR)\Lib\$(UCRTVERSION)\um\$(LIBSUBDIR)";"$(UNIVERSALCRTSDKDIR)\Lib\$(UCRTVERSION)\ucrt\$(LIBSUBDIR)"
 	$(DMD) -shared -of$(DLL) $(DFLAGS) $(SRC_TO_COMPILE) \
 		$(ZLIB) -L/IMPLIB:imp_$(LIB_SHARED) -L/IGNORE:4049 \
 		-L/IGNORE:4217 $(DRUNTIME_SHARED_OBJ) $(DRUNTIME_SHARED_C_LIB) $(DRUNTIME_SHARED_DLLFIXUP)
@@ -690,11 +681,11 @@ CC32=$(CC)\..\..\cl
 
 # build phobos32mscoff.lib
 phobos32mscoff:
-	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff LIBSUBDIR=x86 "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)"
+	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)"
 
 # run unittests for 32-bit COFF version
 unittest32mscoff:
-	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff LIBSUBDIR=x86 "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)" unittest
+	$(MAKE) -f win64.mak "DMD=$(DMD)" "MAKE=$(MAKE)" MODEL=32mscoff "CC=\$(CC32)"\"" "AR=\$(AR)"\"" "VCDIR=$(VCDIR)" "SDKDIR=$(SDKDIR)" unittest
 
 ######################################################
 
