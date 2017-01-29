@@ -123,7 +123,7 @@ Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
          http://www.boost.org/LICENSE_1_0.txt)
 */
-module std.xml;
+export module std.xml;
 
 enum cdata = "<![CDATA[";
 
@@ -135,7 +135,7 @@ enum cdata = "<![CDATA[";
  * Params:
  *    c = the character to be tested
  */
-bool isChar(dchar c) @safe @nogc pure nothrow // rule 2
+export bool isChar(dchar c) @safe @nogc pure nothrow // rule 2
 {
     if (c <= 0xD7FF)
     {
@@ -200,7 +200,7 @@ bool isChar(dchar c) @safe @nogc pure nothrow // rule 2
  * Params:
  *    c = the character to be tested
  */
-bool isSpace(dchar c) @safe @nogc pure nothrow
+export bool isSpace(dchar c) @safe @nogc pure nothrow
 {
     return c == '\u0020' || c == '\u0009' || c == '\u000A' || c == '\u000D';
 }
@@ -213,7 +213,7 @@ bool isSpace(dchar c) @safe @nogc pure nothrow
  * Params:
  *    c = the character to be tested
  */
-bool isDigit(dchar c) @safe @nogc pure nothrow
+export bool isDigit(dchar c) @safe @nogc pure nothrow
 {
     if (c <= 0x0039 && c >= 0x0030)
         return true;
@@ -238,7 +238,7 @@ bool isDigit(dchar c) @safe @nogc pure nothrow
  * Params:
  *    c = the character to be tested
  */
-bool isLetter(dchar c) @safe @nogc nothrow pure // rule 84
+export bool isLetter(dchar c) @safe @nogc nothrow pure // rule 84
 {
     return isIdeographic(c) || isBaseChar(c);
 }
@@ -252,7 +252,7 @@ bool isLetter(dchar c) @safe @nogc nothrow pure // rule 84
  * Params:
  *    c = the character to be tested
  */
-bool isIdeographic(dchar c) @safe @nogc nothrow pure
+export bool isIdeographic(dchar c) @safe @nogc nothrow pure
 {
     if (c == 0x3007)
         return true;
@@ -430,7 +430,7 @@ enum DecodeMode
  * writefln(decode("a &gt; b")); // writes "a > b"
  * --------------
  */
-string decode(string s, DecodeMode mode=DecodeMode.LOOSE) @system pure
+export string decode(string s, DecodeMode mode=DecodeMode.LOOSE) @system pure
 {
     import std.algorithm.searching : startsWith;
 
@@ -527,7 +527,7 @@ string decode(string s, DecodeMode mode=DecodeMode.LOOSE) @system pure
  * Standards: $(LINK2 http://www.w3.org/TR/1998/REC-xml-19980210, XML 1.0)
  *
  */
-class Document : Element
+export class Document : Element
 {
     /**
      * Contains all text which occurs before the root element.
@@ -666,7 +666,7 @@ class Document : Element
  *
  * Standards: $(LINK2 http://www.w3.org/TR/1998/REC-xml-19980210, XML 1.0)
  */
-class Element : Item
+export class Element : Item
 {
     Tag tag; /// The start tag of the element
     Item[] items; /// The element's items
@@ -1630,7 +1630,7 @@ class ProcessingInstruction : Item
 /**
  * Abstract base class for XML items
  */
-abstract class Item
+export abstract class Item
 {
     /// Compares with another Item of same type for equality
     abstract override bool opEquals(Object o);
@@ -1675,7 +1675,7 @@ abstract class Item
  *      If there is an encoding attribute in the prolog, it is ignored.
  *
  */
-class DocumentParser : ElementParser
+export class DocumentParser : ElementParser
 {
     string xmlText;
 
@@ -2689,7 +2689,7 @@ private
  * parse failure (the XML equivalent of a stack trace), giving the line and
  * column number of every failure at every level.
  */
-void check(string s) pure
+export void check(string s) pure
 {
     try
     {
@@ -2820,46 +2820,46 @@ EOS";
 }
 
 /** The base class for exceptions thrown by this module */
-class XMLException : Exception { this(string msg) @safe pure { super(msg); } }
+export class XMLException : Exception { this(string msg) @safe pure { super(msg); } }
 
 // Other exceptions
 
 /// Thrown during Comment constructor
-class CommentException : XMLException
+export class CommentException : XMLException
 { private this(string msg) @safe pure { super(msg); } }
 
 /// Thrown during CData constructor
-class CDataException : XMLException
+export class CDataException : XMLException
 { private this(string msg) @safe pure { super(msg); } }
 
 /// Thrown during XMLInstruction constructor
-class XIException : XMLException
+export class XIException : XMLException
 { private this(string msg) @safe pure { super(msg); } }
 
 /// Thrown during ProcessingInstruction constructor
-class PIException : XMLException
+export class PIException : XMLException
 { private this(string msg) @safe pure { super(msg); } }
 
 /// Thrown during Text constructor
-class TextException : XMLException
+export class TextException : XMLException
 { private this(string msg) @safe pure { super(msg); } }
 
 /// Thrown during decode()
-class DecodeException : XMLException
+export class DecodeException : XMLException
 { private this(string msg) @safe pure { super(msg); } }
 
 /// Thrown if comparing with wrong type
-class InvalidTypeException : XMLException
+export class InvalidTypeException : XMLException
 { private this(string msg) @safe pure { super(msg); } }
 
 /// Thrown when parsing for Tags
-class TagException : XMLException
+export class TagException : XMLException
 { private this(string msg) @safe pure { super(msg); } }
 
 /**
  * Thrown during check()
  */
-class CheckException : XMLException
+export class CheckException : XMLException
 {
     CheckException err; /// Parent in hierarchy
     private string tail;
