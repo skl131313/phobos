@@ -95,7 +95,7 @@ $(TR $(TDNW UUID namespaces)
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
  */
-module std.uuid;
+export module std.uuid;
 
 ///
 @safe unittest
@@ -125,7 +125,7 @@ import std.traits;
 /**
  *
  */
-public struct UUID
+public export struct UUID
 {
     import std.meta : AliasSeq, allSatisfy;
 
@@ -993,7 +993,7 @@ public struct UUID
  * for strings and wstrings. It's always possible to pass wstrings and dstrings
  * by using the ubyte[] function overload (but be aware of endianness issues!).
  */
-@safe pure nothrow @nogc UUID md5UUID(const(char[]) name, const UUID namespace = UUID.init)
+@safe export pure nothrow @nogc UUID md5UUID(const(char[]) name, const UUID namespace = UUID.init)
 {
     return md5UUID(cast(const(ubyte[]))name, namespace);
 }
@@ -1001,7 +1001,7 @@ public struct UUID
 /**
  * ditto
  */
-@safe pure nothrow @nogc UUID md5UUID(const(ubyte[]) data, const UUID namespace = UUID.init)
+@safe export pure nothrow @nogc UUID md5UUID(const(ubyte[]) data, const UUID namespace = UUID.init)
 {
     import std.digest.md : MD5;
 
@@ -1106,7 +1106,7 @@ public struct UUID
  * for strings and wstrings. It's always possible to pass wstrings and dstrings
  * by using the ubyte[] function overload (but be aware of endianness issues!).
  */
-@safe pure nothrow @nogc UUID sha1UUID(in char[] name, const UUID namespace = UUID.init)
+@safe export pure nothrow @nogc UUID sha1UUID(in char[] name, const UUID namespace = UUID.init)
 {
     return sha1UUID(cast(const(ubyte[]))name, namespace);
 }
@@ -1114,7 +1114,7 @@ public struct UUID
 /**
  * ditto
  */
-@safe pure nothrow @nogc UUID sha1UUID(in ubyte[] data, const UUID namespace = UUID.init)
+@safe export pure nothrow @nogc UUID sha1UUID(in ubyte[] data, const UUID namespace = UUID.init)
 {
     import std.digest.sha : SHA1;
 
@@ -1194,7 +1194,7 @@ public struct UUID
  * This function is not supported at compile time.
  *
  */
-@safe UUID randomUUID()
+@safe export UUID randomUUID()
 {
     import std.random : rndGen;
     return randomUUID(rndGen);
@@ -1681,7 +1681,7 @@ enum uuidRegex = "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}"~
  * This exception is thrown if an error occurs when parsing a UUID
  * from a string.
  */
-public class UUIDParsingException : Exception
+public export class UUIDParsingException : Exception
 {
     /**
      * The reason why parsing the UUID string failed (if known)
@@ -1701,7 +1701,7 @@ public class UUIDParsingException : Exception
     ///The position in the input string where the error occurred.
     size_t position;
 
-    private this(string input, size_t pos, Reason why = Reason.unknown, string msg = "",
+    private export this(string input, size_t pos, Reason why = Reason.unknown, string msg = "",
         Throwable next = null, string file = __FILE__, size_t line = __LINE__) pure @trusted
     {
         import std.array : replace;
