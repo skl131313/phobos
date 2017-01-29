@@ -21,7 +21,7 @@
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
  */
-module std.uri;
+export module std.uri;
 
 //debug=uri;        // uncomment to turn on debugging writefln's
 debug(uri) private import std.stdio;
@@ -30,7 +30,7 @@ private import std.traits : isSomeChar;
 /** This Exception is thrown if something goes wrong when encoding or
 decoding a URI.
 */
-class URIException : Exception
+export class URIException : Exception
 {
     import std.exception : basicExceptionCtors;
     mixin basicExceptionCtors;
@@ -65,7 +65,7 @@ private immutable ubyte[128] uri_flags =      // indexed by character
         return uflags;
     })();
 
-private string URI_Encode(dstring string, uint unescapedSet)
+private export string URI_Encode(dstring string, uint unescapedSet)
 {
     import core.exception : OutOfMemoryError;
     import core.stdc.stdlib : alloca;
@@ -186,7 +186,7 @@ private string URI_Encode(dstring string, uint unescapedSet)
     return R[0..Rlen].idup;
 }
 
-private uint ascii2hex(dchar c) @nogc @safe pure nothrow
+private export uint ascii2hex(dchar c) @nogc @safe pure nothrow
 {
     return (c <= '9') ? c - '0' :
         (c <= 'F') ? c - 'A' + 10 :
