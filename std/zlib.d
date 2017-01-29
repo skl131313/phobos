@@ -53,7 +53,7 @@
  *    (See accompanying file LICENSE_1_0.txt or copy at
  *          http://www.boost.org/LICENSE_1_0.txt)
  */
-module std.zlib;
+export module std.zlib;
 
 //debug=zlib;       // uncomment to turn on debugging printf's
 
@@ -73,7 +73,7 @@ enum
  * Errors throw a ZlibException.
  */
 
-class ZlibException : Exception
+export class ZlibException : Exception
 {
     this(int errnum)
     {   string msg;
@@ -110,7 +110,7 @@ class ZlibException : Exception
  *     $(LINK http://en.wikipedia.org/wiki/Adler-32)
  */
 
-uint adler32(uint adler, const(void)[] buf)
+export uint adler32(uint adler, const(void)[] buf)
 {
     import std.range : chunks;
     foreach (chunk; (cast(ubyte[])buf).chunks(0xFFFF0000))
@@ -153,7 +153,7 @@ uint adler32(uint adler, const(void)[] buf)
  *     $(LINK http://en.wikipedia.org/wiki/Cyclic_redundancy_check)
  */
 
-uint crc32(uint crc, const(void)[] buf)
+export uint crc32(uint crc, const(void)[] buf)
 {
     import std.range : chunks;
     foreach (chunk; (cast(ubyte[])buf).chunks(0xFFFF0000))
@@ -188,7 +188,7 @@ uint crc32(uint crc, const(void)[] buf)
  *     the compressed data
  */
 
-ubyte[] compress(const(void)[] srcbuf, int level)
+export ubyte[] compress(const(void)[] srcbuf, int level)
 in
 {
     assert(-1 <= level && level <= 9);
@@ -213,7 +213,7 @@ body
  * ditto
  */
 
-ubyte[] compress(const(void)[] srcbuf)
+export ubyte[] compress(const(void)[] srcbuf)
 {
     return compress(srcbuf, Z_DEFAULT_COMPRESSION);
 }
@@ -229,7 +229,7 @@ ubyte[] compress(const(void)[] srcbuf)
  * Returns: the decompressed data.
  */
 
-void[] uncompress(const(void)[] srcbuf, size_t destlen = 0u, int winbits = 15)
+export void[] uncompress(const(void)[] srcbuf, size_t destlen = 0u, int winbits = 15)
 {
     import std.conv : to;
     int err;
@@ -334,7 +334,7 @@ enum HeaderFormat {
  * Used when the data to be compressed is not all in one buffer.
  */
 
-class Compress
+export class Compress
 {
     import std.conv : to;
 
@@ -515,7 +515,7 @@ class Compress
  * Used when the data to be decompressed is not all in one buffer.
  */
 
-class UnCompress
+export class UnCompress
 {
     import std.conv : to;
 
