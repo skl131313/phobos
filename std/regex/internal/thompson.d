@@ -6,7 +6,7 @@
         - looking at each character only once
         - merging of equivalent threads, that gives matching process linear time complexity
 */
-module std.regex.internal.thompson;
+export module std.regex.internal.thompson;
 
 package(std.regex):
 

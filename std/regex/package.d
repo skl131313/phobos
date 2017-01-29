@@ -259,7 +259,7 @@ Macros:
     SECTION = <h3><a id="$1">$0</a></h3>
     S_LINK = <a href="#$1">$+</a>
  +/
-module std.regex;
+export module std.regex;
 
 import std.regex.internal.ir;
 import std.regex.internal.thompson; //TODO: get rid of this dependency
