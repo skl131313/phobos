@@ -101,7 +101,7 @@ Source: $(PHOBOSSRC std/algorithm/_searching.d)
 Macros:
 T2=$(TR $(TDNW $(LREF $1)) $(TD $+))
  */
-module std.algorithm.searching;
+export module std.algorithm.searching;
 
 // FIXME
 import std.functional; // : unaryFun, binaryFun;
@@ -120,7 +120,7 @@ template all(alias pred = "a")
     input _range $(D range) satisfy the predicate $(D pred).
     Performs (at most) $(BIGOH range.length) evaluations of $(D pred).
      +/
-    bool all(Range)(Range range)
+    export bool all(Range)(Range range)
     if (isInputRange!Range && is(typeof(unaryFun!pred(range.front))))
     {
         import std.functional : not;
@@ -166,7 +166,7 @@ template any(alias pred = "a")
     input _range $(D range) satisfies the predicate $(D pred).
     Performs (at most) $(BIGOH range.length) evaluations of $(D pred).
      +/
-    bool any(Range)(Range range)
+    export bool any(Range)(Range range)
     if (isInputRange!Range && is(typeof(unaryFun!pred(range.front))))
     {
         return !find!pred(range).empty;
@@ -227,7 +227,7 @@ Returns:
     true if the given range has balanced parenthesis within the given maximum
     nesting level; false otherwise.
 */
-bool balancedParens(Range, E)(Range r, E lPar, E rPar,
+export bool balancedParens(Range, E)(Range r, E lPar, E rPar,
         size_t maxNestingLevel = size_t.max)
 if (isInputRange!(Range) && is(typeof(r.front == lPar)))
 {
@@ -276,7 +276,7 @@ if (isInputRange!(Range) && is(typeof(r.front == lPar)))
  * invoke the Boyer-Moore matching algorithm for finding of $(D needle) in a
  * given haystack.
  */
-struct BoyerMooreFinder(alias pred, Range)
+export struct BoyerMooreFinder(alias pred, Range)
 {
 private:
     size_t[] skip;                              // GC allocated
@@ -422,7 +422,7 @@ prefix of both ranges.
 See_Also:
     $(REF takeExactly, std,range)
  */
-auto commonPrefix(alias pred = "a == b", R1, R2)(R1 r1, R2 r2)
+export auto commonPrefix(alias pred = "a == b", R1, R2)(R1 r1, R2 r2)
 if (isForwardRange!R1 && isInputRange!R2 &&
     !isNarrowString!R1 &&
     is(typeof(binaryFun!pred(r1.front, r2.front))))
@@ -462,7 +462,7 @@ if (isForwardRange!R1 && isInputRange!R2 &&
 }
 
 /// ditto
-auto commonPrefix(alias pred, R1, R2)(R1 r1, R2 r2)
+export auto commonPrefix(alias pred, R1, R2)(R1 r1, R2 r2)
 if (isNarrowString!R1 && isInputRange!R2 &&
     is(typeof(binaryFun!pred(r1.front, r2.front))))
 {
@@ -483,7 +483,7 @@ if (isNarrowString!R1 && isInputRange!R2 &&
 }
 
 /// ditto
-auto commonPrefix(R1, R2)(R1 r1, R2 r2)
+export auto commonPrefix(R1, R2)(R1 r1, R2 r2)
 if (isNarrowString!R1 && isInputRange!R2 && !isNarrowString!R2 &&
     is(typeof(r1.front == r2.front)))
 {
@@ -491,7 +491,7 @@ if (isNarrowString!R1 && isInputRange!R2 && !isNarrowString!R2 &&
 }
 
 /// ditto
-auto commonPrefix(R1, R2)(R1 r1, R2 r2)
+export auto commonPrefix(R1, R2)(R1 r1, R2 r2)
 if (isNarrowString!R1 && isNarrowString!R2)
 {
     import std.algorithm.comparison : min;
@@ -613,7 +613,7 @@ Params:
 Returns:
     The number of positions in the `haystack` for which `pred` returned true.
 */
-size_t count(alias pred = "a == b", Range, E)(Range haystack, E needle)
+export size_t count(alias pred = "a == b", Range, E)(Range haystack, E needle)
     if (isInputRange!Range && !isInfinite!Range &&
         is(typeof(binaryFun!pred(haystack.front, needle)) : bool))
 {
@@ -670,7 +670,7 @@ size_t count(alias pred = "a == b", Range, E)(Range haystack, E needle)
 }
 
 /// Ditto
-size_t count(alias pred = "a == b", R1, R2)(R1 haystack, R2 needle)
+export size_t count(alias pred = "a == b", R1, R2)(R1 haystack, R2 needle)
     if (isForwardRange!R1 && !isInfinite!R1 &&
         isForwardRange!R2 &&
         is(typeof(binaryFun!pred(haystack.front, needle.front)) : bool))
@@ -694,7 +694,7 @@ size_t count(alias pred = "a == b", R1, R2)(R1 haystack, R2 needle)
 }
 
 /// Ditto
-size_t count(alias pred = "true", R)(R haystack)
+export size_t count(alias pred = "true", R)(R haystack)
     if (isInputRange!R && !isInfinite!R &&
         is(typeof(unaryFun!pred(haystack.front)) : bool))
 {
@@ -741,7 +741,7 @@ size_t count(alias pred = "true", R)(R haystack)
     $(D startsWith!pred(haystack, needles)) is not $(D true) for any element in
     $(D haystack), then $(D -1) is returned.
   +/
-ptrdiff_t countUntil(alias pred = "a == b", R, Rs...)(R haystack, Rs needles)
+export ptrdiff_t countUntil(alias pred = "a == b", R, Rs...)(R haystack, Rs needles)
     if (isForwardRange!R
         && Rs.length > 0
         && isForwardRange!(Rs[0]) == isInputRange!(Rs[0])
@@ -829,7 +829,7 @@ ptrdiff_t countUntil(alias pred = "a == b", R, Rs...)(R haystack, Rs needles)
 }
 
 /// ditto
-ptrdiff_t countUntil(alias pred = "a == b", R, N)(R haystack, N needle)
+export ptrdiff_t countUntil(alias pred = "a == b", R, N)(R haystack, N needle)
     if (isInputRange!R &&
         is(typeof(binaryFun!pred(haystack.front, needle)) : bool))
 {
@@ -899,7 +899,7 @@ ptrdiff_t countUntil(alias pred = "a == b", R, N)(R haystack, N needle)
     Returns: The number of elements which must be popped from $(D haystack)
     before $(D pred(haystack.front)) is $(D true).
   +/
-ptrdiff_t countUntil(alias pred, R)(R haystack)
+export ptrdiff_t countUntil(alias pred, R)(R haystack)
     if (isInputRange!R &&
         is(typeof(unaryFun!pred(haystack.front)) : bool))
 {
@@ -1008,7 +1008,7 @@ on.
 In the case when no needle parameters are given, return $(D true) iff back of
 $(D doesThisStart) fulfils predicate $(D pred).
 */
-uint endsWith(alias pred = "a == b", Range, Needles...)(Range doesThisEnd, Needles withOneOfThese)
+export uint endsWith(alias pred = "a == b", Range, Needles...)(Range doesThisEnd, Needles withOneOfThese)
 if (isBidirectionalRange!Range && Needles.length > 1 &&
     is(typeof(.endsWith!pred(doesThisEnd, withOneOfThese[0])) : bool) &&
     is(typeof(.endsWith!pred(doesThisEnd, withOneOfThese[1 .. $])) : uint))
@@ -1075,7 +1075,7 @@ if (isBidirectionalRange!Range && Needles.length > 1 &&
 }
 
 /// Ditto
-bool endsWith(alias pred = "a == b", R1, R2)(R1 doesThisEnd, R2 withThis)
+export bool endsWith(alias pred = "a == b", R1, R2)(R1 doesThisEnd, R2 withThis)
 if (isBidirectionalRange!R1 &&
     isBidirectionalRange!R2 &&
     is(typeof(binaryFun!pred(doesThisEnd.back, withThis.back)) : bool))
@@ -1103,7 +1103,7 @@ if (isBidirectionalRange!R1 &&
 }
 
 /// Ditto
-bool endsWith(alias pred = "a == b", R, E)(R doesThisEnd, E withThis)
+export bool endsWith(alias pred = "a == b", R, E)(R doesThisEnd, E withThis)
 if (isBidirectionalRange!R &&
     is(typeof(binaryFun!pred(doesThisEnd.back, withThis)) : bool))
 {
@@ -1113,7 +1113,7 @@ if (isBidirectionalRange!R &&
 }
 
 /// Ditto
-bool endsWith(alias pred, R)(R doesThisEnd)
+export bool endsWith(alias pred, R)(R doesThisEnd)
     if (isInputRange!R &&
         ifTestable!(typeof(doesThisEnd.front), unaryFun!pred))
 {
@@ -1248,7 +1248,7 @@ Params:
 Returns:
     The extreme value according to `map` and `selector` of the passed-in values.
 */
-private auto extremum(alias map = "a", alias selector = "a < b", Range)(Range r)
+private export auto extremum(alias map = "a", alias selector = "a < b", Range)(Range r)
     if (isInputRange!Range && !isInfinite!Range)
 in
 {
@@ -1263,9 +1263,9 @@ body
     return extremum!(map, selector)(r, seed);
 }
 
-private auto extremum(alias map = "a", alias selector = "a < b", Range,
-                      RangeElementType = ElementType!Range)
-                     (Range r, RangeElementType seedElement)
+private export auto extremum(alias map = "a", alias selector = "a < b", Range,
+                             RangeElementType = ElementType!Range)
+                            (Range r, RangeElementType seedElement)
     if (isInputRange!Range && !isInfinite!Range &&
         !is(CommonType!(ElementType!Range, RangeElementType) == void))
 {
@@ -1367,7 +1367,7 @@ such position exists, returns an empty $(D haystack).
 See_Also:
      $(HTTP sgi.com/tech/stl/_find.html, STL's _find)
  */
-InputRange find(alias pred = "a == b", InputRange, Element)(InputRange haystack, scope Element needle)
+export InputRange find(alias pred = "a == b", InputRange, Element)(InputRange haystack, scope Element needle)
 if (isInputRange!InputRange &&
     is (typeof(binaryFun!pred(haystack.front, needle)) : bool))
 {
@@ -1761,7 +1761,7 @@ Returns:
 $(D haystack) advanced such that $(D needle) is a prefix of it (if no
 such position exists, returns $(D haystack) advanced to termination).
  */
-R1 find(alias pred = "a == b", R1, R2)(R1 haystack, scope R2 needle)
+export R1 find(alias pred = "a == b", R1, R2)(R1 haystack, scope R2 needle)
 if (isForwardRange!R1 && isForwardRange!R2
         && is(typeof(binaryFun!pred(haystack.front, needle.front)) : bool)
         && !isRandomAccessRange!R1)
@@ -1823,7 +1823,7 @@ if (isForwardRange!R1 && isForwardRange!R2
 }
 
 /// ditto
-R1 find(alias pred = "a == b", R1, R2)(R1 haystack, scope R2 needle)
+export R1 find(alias pred = "a == b", R1, R2)(R1 haystack, scope R2 needle)
 if (isRandomAccessRange!R1 && hasLength!R1 && hasSlicing!R1 && isBidirectionalRange!R2
         && is(typeof(binaryFun!pred(haystack.front, needle.front)) : bool))
 {
@@ -3944,7 +3944,7 @@ list matches).
 In the case when no needle parameters are given, return $(D true) iff front of
 $(D doesThisStart) fulfils predicate $(D pred).
  */
-uint startsWith(alias pred = "a == b", Range, Needles...)(Range doesThisStart, Needles withOneOfThese)
+export uint startsWith(alias pred = "a == b", Range, Needles...)(Range doesThisStart, Needles withOneOfThese)
 if (isInputRange!Range && Needles.length > 1 &&
     is(typeof(.startsWith!pred(doesThisStart, withOneOfThese[0])) : bool ) &&
     is(typeof(.startsWith!pred(doesThisStart, withOneOfThese[1 .. $])) : uint))
@@ -4017,7 +4017,7 @@ if (isInputRange!Range && Needles.length > 1 &&
 }
 
 /// Ditto
-bool startsWith(alias pred = "a == b", R1, R2)(R1 doesThisStart, R2 withThis)
+export bool startsWith(alias pred = "a == b", R1, R2)(R1 doesThisStart, R2 withThis)
 if (isInputRange!R1 &&
     isInputRange!R2 &&
     is(typeof(binaryFun!pred(doesThisStart.front, withThis.front)) : bool))
@@ -4086,7 +4086,7 @@ if (isInputRange!R1 &&
 }
 
 /// Ditto
-bool startsWith(alias pred = "a == b", R, E)(R doesThisStart, E withThis)
+export bool startsWith(alias pred = "a == b", R, E)(R doesThisStart, E withThis)
     if (isInputRange!R &&
         is(typeof(binaryFun!pred(doesThisStart.front, withThis)) : bool))
 {
@@ -4096,7 +4096,7 @@ bool startsWith(alias pred = "a == b", R, E)(R doesThisStart, E withThis)
 }
 
 /// Ditto
-bool startsWith(alias pred, R)(R doesThisStart)
+export bool startsWith(alias pred, R)(R doesThisStart)
     if (isInputRange!R &&
         ifTestable!(typeof(doesThisStart.front), unaryFun!pred))
 {
