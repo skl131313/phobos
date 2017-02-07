@@ -31707,6 +31707,7 @@ version(Windows) version(UpdateWindowsTZTranslations) deprecated @system unittes
 // Section with StopWatch and Benchmark Code.
 //==============================================================================
 
+
 /++
    $(D StopWatch) measures time as precisely as possible.
 
